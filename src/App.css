@@ -142,6 +142,53 @@
   }
 }
 
+.stats-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.stat-bar-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 6px;
+  font-size: 14px;
+
+  .stat-bar-label {
+    font-weight: 600;
+    color: var(--text-h);
+  }
+
+  .stat-bar-value {
+    color: var(--text);
+  }
+}
+
+.stat-bar-progress {
+  width: 100%;
+  height: 10px;
+  appearance: none;
+  border: none;
+  border-radius: 999px;
+  overflow: hidden;
+
+  &::-webkit-progress-bar {
+    background: var(--accent-bg);
+    border-radius: 999px;
+  }
+
+  &::-webkit-progress-value {
+    background: var(--accent);
+    border-radius: 999px;
+    transition: width 0.2s;
+  }
+
+  &::-moz-progress-bar {
+    background: var(--accent);
+    border-radius: 999px;
+  }
+}
+
 .food-log-form {
   display: flex;
   gap: 12px;

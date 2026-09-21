@@ -4,23 +4,48 @@
 // Components:
 // 1. Set caloric deficit and macros (Component: CaloricDeficit)
 // 2. Log food intake (Component: FoodLog)
-
+import React from "react";
 import CaloricDeficit from "./Components/CaloricDeficit";
 import Macros from "./Components/Macros";
-import React from "react";
+import DisplayStats from "./Components/DisplayStats";
+import FoodLog from "./Components/FoodLog";
 import "./App.css";
+
+type Macros = {
+  protein: number;
+  carbs: number;
+  fats: number;
+};
+
+type FoodLogEntry = {
+  meal: string;
+  grams: number;
+  calories: number;
+  protein: number;
+  carbs: number;
+  fats: number;
+};
 
 function App() {
   const [caloricDeficit, setCaloricDeficit] = React.useState<number>(0);
-  const [macros, setMacros] = React.useState<{
-    protein: number;
-    carbs: number;
-    fats: number;
-  }>({
+  const [macros, setMacros] = React.useState<Macros>({
     protein: 0,
     carbs: 0,
     fats: 0,
   });
+  const [foodLog, setFoodLog] = React.useState<FoodLogEntry[]>([
+    {
+      meal: "",
+      grams: 0,
+      calories: 0,
+      protein: 0,
+      carbs: 0,
+      fats: 0,
+    }
+  ])
+
+
+  console.log(foodLog)
 
   return (
     <div className="app-shell">
@@ -39,7 +64,7 @@ function App() {
           />
         </section>
 
-        {caloricDeficit !== 0 && (
+        {(caloricDeficit !== 0 && Object.values(macros).every(value => value === 0)) && (
           <section className="card">
             <Macros
               caloricDeficit={caloricDeficit}
@@ -48,6 +73,25 @@ function App() {
             />
           </section>
         )}
+
+        {caloricDeficit !== 0 &&
+          (macros.protein !== 0 || macros.carbs !== 0 || macros.fats !== 0) && (
+            <section className="card">
+              <DisplayStats 
+                caloricDeficit={caloricDeficit} 
+                macros={macros}
+                foodLog={foodLog}
+              />
+            </section>
+          )}
+        <section className="card">
+          <FoodLog 
+            foodLog={foodLog} 
+            setFoodLog={setFoodLog} 
+            caloricDeficit={caloricDeficit} 
+            setCaloricDeficit={setCaloricDeficit} 
+          />
+        </section>
       </main>
     </div>
   );
