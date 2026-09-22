@@ -165,40 +165,82 @@
 }
 
 .stat-bar-progress {
+  --bar: var(--accent);
+  --bar-bg: var(--accent-bg);
+
   width: 100%;
   height: 10px;
   appearance: none;
   border: none;
   border-radius: 999px;
   overflow: hidden;
+  background: var(--bar-bg);
 
   &::-webkit-progress-bar {
-    background: var(--accent-bg);
+    background: var(--bar-bg);
     border-radius: 999px;
   }
 
   &::-webkit-progress-value {
-    background: var(--accent);
+    background: var(--bar);
     border-radius: 999px;
-    transition: width 0.2s;
+    transition: width 0.3s ease;
   }
 
   &::-moz-progress-bar {
-    background: var(--accent);
+    background: var(--bar);
     border-radius: 999px;
   }
 }
 
+.stat-bar-progress--protein {
+  --bar: var(--protein);
+  --bar-bg: var(--protein-bg);
+}
+
+.stat-bar-progress--carbs {
+  --bar: var(--carbs);
+  --bar-bg: var(--carbs-bg);
+}
+
+.stat-bar-progress--fats {
+  --bar: var(--fats);
+  --bar-bg: var(--fats-bg);
+}
+
+.card-header-meta {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+  background: var(--code-bg);
+  border-radius: 999px;
+  padding: 3px 10px;
+  white-space: nowrap;
+}
+
 .food-log-form {
-  display: flex;
-  gap: 12px;
-  align-items: flex-end;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  gap: 12px 14px;
+  align-items: end;
   margin-bottom: 20px;
-  flex-wrap: wrap;
 
   .form-row {
-    flex: 1 1 140px;
     margin-bottom: 0;
+  }
+
+  .form-row--wide {
+    grid-column: 1 / -1;
+  }
+
+  button[type="submit"] {
+    grid-column: 1 / -1;
+    justify-self: end;
+    margin-top: 4px;
+
+    @media (max-width: 480px) {
+      justify-self: stretch;
+    }
   }
 }
 
@@ -214,15 +256,31 @@
 .food-log-item {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   gap: 12px;
   padding: 10px 14px;
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: 10px;
+  transition: border-color 0.2s, background 0.2s;
+
+  &:hover {
+    border-color: var(--accent-border);
+    background: var(--social-bg);
+  }
+
+  .food-log-main {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+    flex: 1;
+  }
 
   .food-name {
     color: var(--text-h);
     font-weight: 500;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .food-calories {
@@ -230,19 +288,84 @@
     font-size: 14px;
     white-space: nowrap;
   }
+
+  @media (max-width: 560px) {
+    flex-wrap: wrap;
+
+    .food-log-main {
+      flex: 1 1 100%;
+      order: 1;
+    }
+
+    .macro-chips {
+      order: 3;
+      flex: 1 1 100%;
+    }
+
+    .food-log-remove {
+      order: 2;
+    }
+  }
+}
+
+.macro-chips {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.macro-chip {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  line-height: 1;
+  padding: 5px 9px;
+  border-radius: 999px;
+  white-space: nowrap;
+  color: var(--chip-text);
+  background: var(--chip-bg);
+  border: 1px solid var(--chip-border);
+}
+
+.macro-chip--protein {
+  --chip-text: var(--protein);
+  --chip-bg: var(--protein-bg);
+  --chip-border: var(--protein-border);
+}
+
+.macro-chip--carbs {
+  --chip-text: var(--carbs);
+  --chip-bg: var(--carbs-bg);
+  --chip-border: var(--carbs-border);
+}
+
+.macro-chip--fats {
+  --chip-text: var(--fats);
+  --chip-bg: var(--fats-bg);
+  --chip-border: var(--fats-border);
 }
 
 .food-log-remove {
   background: none;
   border: none;
   color: var(--text);
-  font-size: 18px;
+  font-size: 20px;
   line-height: 1;
-  padding: 0 4px;
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  border-radius: 999px;
   cursor: pointer;
+  transition: color 0.2s, background 0.2s;
 
   &:hover {
     color: var(--accent);
+    background: var(--accent-bg);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
   }
 }
 

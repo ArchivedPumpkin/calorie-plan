@@ -44,21 +44,21 @@ export default function DisplayStats(props: DisplayStatsProps) {
             <label htmlFor="protein" className="stat-bar-label">Protein</label>
             <span className="stat-bar-value">{totalProtein} / {props.macros.protein} g</span>
           </div>
-          <progress id="protein" className="stat-bar-progress" value={totalProtein} max={props.macros.protein} />
+          <progress id="protein" className="stat-bar-progress stat-bar-progress--protein" value={totalProtein} max={props.macros.protein} />
         </div>
         <div className="stat-bar">
           <div className="stat-bar-header">
             <label htmlFor="carbs" className="stat-bar-label">Carbs</label>
             <span className="stat-bar-value">{totalCarbs} / {props.macros.carbs} g</span>
           </div>
-          <progress id="carbs" className="stat-bar-progress" value={totalCarbs} max={props.macros.carbs} />
+          <progress id="carbs" className="stat-bar-progress stat-bar-progress--carbs" value={totalCarbs} max={props.macros.carbs} />
         </div>
         <div className="stat-bar">
           <div className="stat-bar-header">
             <label htmlFor="fats" className="stat-bar-label">Fats</label>
             <span className="stat-bar-value">{totalFats} / {props.macros.fats} g</span>
           </div>
-          <progress id="fats" className="stat-bar-progress" value={totalFats} max={props.macros.fats} />
+          <progress id="fats" className="stat-bar-progress stat-bar-progress--fats" value={totalFats} max={props.macros.fats} />
         </div>
       </div>
     </div>

@@ -24,10 +24,11 @@ type FoodLogProps = {
 
 export default function FoodLog(props: FoodLogProps) {
 
-    function submitFoodLog(e: React.SubmitEvent<HTMLFormElement>){
+    function submitFoodLog(e: React.FormEvent<HTMLFormElement>){
         e.preventDefault();
 
-        const formData = new FormData(e.currentTarget)
+        const form = e.currentTarget
+        const formData = new FormData(form)
         const meal = formData.get("meal") as string
         const grams = Number(formData.get("grams"))
         const calories = Number(formData.get("calories"))
@@ -37,7 +38,7 @@ export default function FoodLog(props: FoodLogProps) {
 
         props.setFoodLog(prev => [...prev, { meal, grams, calories, protein, carbs, fats } ])
         props.setCaloricDeficit(prev => prev - calories)
-        e.currentTarget.reset()
+        form.reset()
     }
 
     function removeFoodLogEntry(index:number) {
@@ -45,44 +46,86 @@ export default function FoodLog(props: FoodLogProps) {
         props.setCaloricDeficit(prev => prev + props.foodLog[index].calories)   
     }
 
-    const foodLogEntries = props.foodLog.filter(entry => entry.meal !== "").map((entry, index) => (
-        <div key={index}>
-            <p>Meal: {entry.meal}</p>
-            <p>Grams: {entry.grams}</p>
-            <p>Calories: {entry.calories}</p>
-            <p>Protein: {entry.protein}</p>
-            <p>Carbs: {entry.carbs}</p>
-            <p>Fats: {entry.fats}</p>
-            <button type="button" onClick={() => removeFoodLogEntry(index)}>Remove</button>
-        </div>
+    const loggedMeals = props.foodLog.filter(entry => entry.meal !== "")
+
+    const foodLogEntries = props.foodLog.map((entry, index) => [entry, index] as const)
+        .filter(([entry]) => entry.meal !== "")
+        .map(([entry, index]) => (
+        <li className="food-log-item" key={index}>
+            <div className="food-log-main">
+                <span className="food-name">{entry.meal}</span>
+                <span className="food-calories">{entry.grams}g &middot; {entry.calories} kcal</span>
+            </div>
+            <div className="macro-chips">
+                <span className="macro-chip macro-chip--protein">{entry.protein}g P</span>
+                <span className="macro-chip macro-chip--carbs">{entry.carbs}g C</span>
+                <span className="macro-chip macro-chip--fats">{entry.fats}g F</span>
+            </div>
+            <button
+                type="button"
+                className="food-log-remove"
+                aria-label={`Remove ${entry.meal}`}
+                onClick={() => removeFoodLogEntry(index)}
+            >
+                &times;
+            </button>
+        </li>
     ))
 
-    
+    const totalCalories = loggedMeals.reduce((sum, entry) => sum + entry.calories, 0)
 
   return (
-    <>
-
     <div className="food-log">
-        <div className="food-log-entries">
-            {props.foodLog.some(entry => entry.meal !== "") && foodLogEntries }
+        <div className="card-header">
+            <h2>Food Log</h2>
+            {loggedMeals.length > 0 && (
+                <span className="card-header-meta">
+                    {loggedMeals.length} {loggedMeals.length === 1 ? "meal" : "meals"}
+                </span>
+            )}
         </div>
 
-        <form onSubmit={submitFoodLog}>
-          <label htmlFor="meal">Meal:</label>
-            <input type="text" id="meal" name="meal" />
-          <label htmlFor="grams">Grams:</label>
-            <input type="number" id="grams" name="grams" />
-          <label htmlFor="calories">Calories:</label>
-            <input type="number" id="calories" name="calories" />
-          <label htmlFor="protein">Protein:</label>
-            <input type="number" id="protein" name="protein" />
-          <label htmlFor="carbs">Carbs:</label>
-            <input type="number" id="carbs" name="carbs" />
-          <label htmlFor="fats">Fats:</label>
-            <input type="number" id="fats" name="fats" />
-          <button type="submit">Add</button>
+        <form className="food-log-form" onSubmit={submitFoodLog}>
+            <div className="form-row form-row--wide">
+                <label htmlFor="meal">Meal</label>
+                <input type="text" id="meal" name="meal" placeholder="e.g. Chicken &amp; rice" required />
+            </div>
+            <div className="form-row">
+                <label htmlFor="grams">Grams</label>
+                <input type="number" id="grams" name="grams" min={0} placeholder="0" />
+            </div>
+            <div className="form-row">
+                <label htmlFor="calories">Calories</label>
+                <input type="number" id="calories" name="calories" min={0} placeholder="0" />
+            </div>
+            <div className="form-row">
+                <label htmlFor="protein">Protein</label>
+                <input type="number" id="protein" name="protein" min={0} placeholder="0" />
+            </div>
+            <div className="form-row">
+                <label htmlFor="carbs">Carbs</label>
+                <input type="number" id="carbs" name="carbs" min={0} placeholder="0" />
+            </div>
+            <div className="form-row">
+                <label htmlFor="fats">Fats</label>
+                <input type="number" id="fats" name="fats" min={0} placeholder="0" />
+            </div>
+            <button type="submit">Add meal</button>
         </form>
+
+        {loggedMeals.length > 0 ? (
+            <>
+                <ul className="food-log-list">
+                    {foodLogEntries}
+                </ul>
+                <div className="food-log-total">
+                    <span>Total logged</span>
+                    <span>{totalCalories} kcal</span>
+                </div>
+            </>
+        ) : (
+            <p className="food-log-empty">No meals logged yet — add your first one above.</p>
+        )}
     </div>
-    </>
   );
 }

@@ -8,6 +8,17 @@
   --accent-bg: rgba(170, 59, 255, 0.1);
   --accent-border: rgba(170, 59, 255, 0.5);
   --social-bg: rgba(244, 243, 236, 0.5);
+
+  --protein: #1d7a5f;
+  --protein-bg: rgba(29, 122, 95, 0.1);
+  --protein-border: rgba(29, 122, 95, 0.25);
+  --carbs: #b45309;
+  --carbs-bg: rgba(180, 83, 9, 0.1);
+  --carbs-border: rgba(180, 83, 9, 0.25);
+  --fats: #2563eb;
+  --fats-bg: rgba(37, 99, 235, 0.1);
+  --fats-border: rgba(37, 99, 235, 0.25);
+
   --shadow:
     rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
 
@@ -41,6 +52,17 @@
     --accent-bg: rgba(192, 132, 252, 0.15);
     --accent-border: rgba(192, 132, 252, 0.5);
     --social-bg: rgba(47, 48, 58, 0.5);
+
+    --protein: #4ade80;
+    --protein-bg: rgba(74, 222, 128, 0.14);
+    --protein-border: rgba(74, 222, 128, 0.3);
+    --carbs: #fbbf24;
+    --carbs-bg: rgba(251, 191, 36, 0.14);
+    --carbs-border: rgba(251, 191, 36, 0.3);
+    --fats: #60a5fa;
+    --fats-bg: rgba(96, 165, 250, 0.14);
+    --fats-border: rgba(96, 165, 250, 0.3);
+
     --shadow:
       rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
   }
@@ -135,6 +157,10 @@ input[type="text"] {
     outline: none;
     border-color: var(--accent);
     box-shadow: 0 0 0 3px var(--accent-bg);
+  }
+  &::placeholder {
+    color: var(--text);
+    opacity: 0.55;
   }
 }
 
