@@ -5,6 +5,7 @@
 // 1. Set caloric deficit and macros (Component: CaloricDeficit)
 // 2. Log food intake (Component: FoodLog)
 import React from "react";
+import { Zap } from "lucide-react";
 import CaloricDeficit from "./Components/CaloricDeficit";
 import Macros from "./Components/Macros";
 import DisplayStats from "./Components/DisplayStats";
@@ -50,49 +51,59 @@ function App() {
   return (
     <div className="app-shell">
       <header className="app-header">
+        <p className="app-eyebrow">
+          <Zap size={13} strokeWidth={2.5} fill="currentColor" />
+          Daily tracker
+        </p>
         <h1>Calorie Plan</h1>
         <p className="app-subtitle">
           Set your deficit, pick your macro split, and log your meals.
         </p>
       </header>
 
-      <main className="app-main">
-        <section className="card">
-          <CaloricDeficit
-            caloricDeficit={caloricDeficit}
-            setCaloricDeficit={setCaloricDeficit}
-          />
-        </section>
-
-        {(caloricDeficit !== 0 && Object.values(macros).every(value => value === 0)) && (
+      <div className="app-layout">
+        {/* Summary rail: stays in view while meals are logged on the right. */}
+        <aside className="app-rail">
           <section className="card">
-            <Macros
+            <CaloricDeficit
               caloricDeficit={caloricDeficit}
-              macros={macros}
-              setMacros={setMacros}
+              setCaloricDeficit={setCaloricDeficit}
             />
           </section>
-        )}
 
-        {caloricDeficit !== 0 &&
-          (macros.protein !== 0 || macros.carbs !== 0 || macros.fats !== 0) && (
+          {(caloricDeficit !== 0 && Object.values(macros).every(value => value === 0)) && (
             <section className="card">
-              <DisplayStats 
-                caloricDeficit={caloricDeficit} 
+              <Macros
+                caloricDeficit={caloricDeficit}
                 macros={macros}
-                foodLog={foodLog}
+                setMacros={setMacros}
               />
             </section>
           )}
-        <section className="card">
-          <FoodLog 
-            foodLog={foodLog} 
-            setFoodLog={setFoodLog} 
-            caloricDeficit={caloricDeficit} 
-            setCaloricDeficit={setCaloricDeficit} 
-          />
-        </section>
-      </main>
+
+          {caloricDeficit !== 0 &&
+            (macros.protein !== 0 || macros.carbs !== 0 || macros.fats !== 0) && (
+              <section className="card">
+                <DisplayStats
+                  caloricDeficit={caloricDeficit}
+                  macros={macros}
+                  foodLog={foodLog}
+                />
+              </section>
+            )}
+        </aside>
+
+        <main className="app-main">
+          <section className="card">
+            <FoodLog
+              foodLog={foodLog}
+              setFoodLog={setFoodLog}
+              caloricDeficit={caloricDeficit}
+              setCaloricDeficit={setCaloricDeficit}
+            />
+          </section>
+        </main>
+      </div>
     </div>
   );
 }

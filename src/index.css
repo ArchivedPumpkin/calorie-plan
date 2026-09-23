@@ -1,34 +1,41 @@
+/* ==========================================================================
+   Design tokens — dark athletic. Charcoal surfaces, one electric accent,
+   a distinct hue per macro, condensed display numerals.
+   ========================================================================== */
 :root {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
+  --bg: #0b0d10;
+  --surface: #14171c;
+  --surface-2: #1a1e25;
+  --surface-hi: #222731;
+  --line: #262b33;
+  --line-strong: #363c47;
 
-  --protein: #1d7a5f;
-  --protein-bg: rgba(29, 122, 95, 0.1);
-  --protein-border: rgba(29, 122, 95, 0.25);
-  --carbs: #b45309;
-  --carbs-bg: rgba(180, 83, 9, 0.1);
-  --carbs-border: rgba(180, 83, 9, 0.25);
-  --fats: #2563eb;
-  --fats-bg: rgba(37, 99, 235, 0.1);
-  --fats-border: rgba(37, 99, 235, 0.25);
+  --text: #98a1af;
+  --text-hi: #f2f5f8;
+  --text-mute: #656d7b;
 
-  --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+  --accent: #c6f24e;
+  --accent-ink: #0b0d10;
+  --accent-soft: rgba(198, 242, 78, 0.12);
+  --accent-line: rgba(198, 242, 78, 0.35);
+  --accent-glow: rgba(198, 242, 78, 0.28);
 
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
+  --protein: #f2545b;
+  --carbs: #4cc9f0;
+  --fats: #ffc857;
 
-  font: 18px/145% var(--sans);
-  letter-spacing: 0.18px;
-  color-scheme: light dark;
+  --display: "Barlow Condensed", "Arial Narrow", system-ui, sans-serif;
+  --sans: "Inter", system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+
+  /* uppercase micro-label, used for section headings and field labels */
+  --label: 600 11px/1.2 var(--sans);
+  --label-tracking: 0.14em;
+
+  --radius: 14px;
+  --radius-sm: 10px;
+
+  font: 16px/1.55 var(--sans);
+  color-scheme: dark light;
   color: var(--text);
   background: var(--bg);
   font-synthesis: none;
@@ -37,38 +44,32 @@
   -moz-osx-font-smoothing: grayscale;
 
   @media (max-width: 1024px) {
-    font-size: 16px;
+    font-size: 15px;
   }
 }
 
-@media (prefers-color-scheme: dark) {
+@media (prefers-color-scheme: light) {
   :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
+    --bg: #f4f6f2;
+    --surface: #ffffff;
+    --surface-2: #f7f9f4;
+    --surface-hi: #eef1ea;
+    --line: #e2e6dd;
+    --line-strong: #cdd3c6;
 
-    --protein: #4ade80;
-    --protein-bg: rgba(74, 222, 128, 0.14);
-    --protein-border: rgba(74, 222, 128, 0.3);
-    --carbs: #fbbf24;
-    --carbs-bg: rgba(251, 191, 36, 0.14);
-    --carbs-border: rgba(251, 191, 36, 0.3);
-    --fats: #60a5fa;
-    --fats-bg: rgba(96, 165, 250, 0.14);
-    --fats-border: rgba(96, 165, 250, 0.3);
+    --text: #5a6270;
+    --text-hi: #11151b;
+    --text-mute: #8c94a2;
 
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
-  }
+    --accent: #4d7c0f;
+    --accent-ink: #ffffff;
+    --accent-soft: rgba(77, 124, 15, 0.1);
+    --accent-line: rgba(77, 124, 15, 0.3);
+    --accent-glow: rgba(77, 124, 15, 0.16);
 
-  #social .button-icon {
-    filter: invert(1) brightness(2);
+    --protein: #d02f38;
+    --carbs: #0e7490;
+    --fats: #a86a00;
   }
 }
 
@@ -78,64 +79,66 @@
 
 body {
   margin: 0;
+  /* A single cool glow behind the masthead so the page has a light source. */
+  background:
+    radial-gradient(900px 420px at 50% -180px, var(--accent-glow), transparent 70%),
+    var(--bg);
+  background-repeat: no-repeat;
 }
 
 #root {
-  width: 720px;
+  width: 1180px;
   max-width: 100%;
   margin: 0 auto;
   min-height: 100svh;
   display: flex;
   flex-direction: column;
-  padding: 0 20px;
+  padding: 0 28px;
+
+  @media (max-width: 720px) {
+    padding: 0 16px;
+  }
 }
 
-h1,
-h2,
-h3 {
-  font-family: var(--heading);
-  font-weight: 500;
-  color: var(--text-h);
-}
+/* --------------------------------------------------------------- headings */
 
 h1 {
-  font-size: 40px;
-  letter-spacing: -1px;
-  margin: 0 0 4px;
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 68px;
+  line-height: 0.92;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  color: var(--text-hi);
+  margin: 0 0 12px;
+
   @media (max-width: 1024px) {
-    font-size: 30px;
+    font-size: 48px;
   }
 }
+
+/* Section headings are micro-labels; the figures carry the page. */
 h2 {
-  font-size: 22px;
-  line-height: 118%;
-  letter-spacing: -0.24px;
-  margin: 0 0 16px;
-  @media (max-width: 1024px) {
-    font-size: 19px;
-  }
+  font: var(--label);
+  letter-spacing: var(--label-tracking);
+  text-transform: uppercase;
+  color: var(--text-hi);
+  margin: 0;
 }
+
 p {
   margin: 0;
 }
 
-code {
-  font-family: var(--mono);
-  display: inline-flex;
-  border-radius: 4px;
-  color: var(--text-h);
-  font-size: 15px;
-  line-height: 135%;
-  padding: 4px 8px;
-  background: var(--code-bg);
-}
+/* ------------------------------------------------------------------ forms */
 
 label {
   display: block;
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--text-h);
-  margin-bottom: 6px;
+  font: var(--label);
+  letter-spacing: var(--label-tracking);
+  text-transform: uppercase;
+  color: var(--text-mute);
+  margin-bottom: 7px;
   text-align: left;
 }
 
@@ -143,24 +146,26 @@ input[type="number"],
 input[type="text"] {
   width: 100%;
   font: inherit;
-  color: var(--text-h);
+  font-weight: 500;
+  color: var(--text-hi);
   background: var(--bg);
-  border: 1.5px solid var(--border);
-  border-radius: 8px;
-  padding: 10px 12px;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  padding: 11px 13px;
+  transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+  font-variant-numeric: tabular-nums;
 
   &:hover {
-    border-color: var(--accent-border);
+    border-color: var(--text-mute);
   }
   &:focus-visible {
     outline: none;
     border-color: var(--accent);
-    box-shadow: 0 0 0 3px var(--accent-bg);
+    box-shadow: 0 0 0 3px var(--accent-soft);
   }
   &::placeholder {
-    color: var(--text);
-    opacity: 0.55;
+    color: var(--text-mute);
+    font-weight: 400;
   }
 }
 
@@ -174,21 +179,48 @@ button[type="submit"],
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  font-size: 15px;
-  font-weight: 600;
-  color: #fff;
+  gap: 8px;
+  font: 700 12px/1 var(--sans);
+  letter-spacing: var(--label-tracking);
+  text-transform: uppercase;
+  color: var(--accent-ink);
   background: var(--accent);
   border: none;
-  border-radius: 8px;
-  padding: 10px 20px;
-  transition: opacity 0.2s, transform 0.1s;
+  border-radius: 999px;
+  padding: 14px 26px;
+  transition: filter 0.15s, box-shadow 0.15s, transform 0.1s;
 
   &:hover {
-    opacity: 0.9;
+    filter: brightness(1.08);
+    box-shadow: 0 0 24px -4px var(--accent-glow);
   }
   &:active {
     transform: scale(0.98);
+  }
+  &:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+}
+
+.btn-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  font: 600 11px/1 var(--sans);
+  letter-spacing: var(--label-tracking);
+  text-transform: uppercase;
+  color: var(--text);
+  padding: 8px 14px;
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
+
+  &:hover {
+    color: var(--accent);
+    border-color: var(--accent-line);
+    background: var(--accent-soft);
   }
   &:focus-visible {
     outline: 2px solid var(--accent);
@@ -196,16 +228,7 @@ button[type="submit"],
   }
 }
 
-.btn-link {
-  background: none;
-  border: none;
-  color: var(--accent);
-  font-size: 14px;
-  font-weight: 500;
-  padding: 4px;
-  text-decoration: underline;
-
-  &:hover {
-    opacity: 0.8;
-  }
+/* Lucide icons inherit colour and never shrink in flex rows. */
+.lucide {
+  flex-shrink: 0;
 }

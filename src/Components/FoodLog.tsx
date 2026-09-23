@@ -1,3 +1,5 @@
+import { UtensilsCrossed, Salad, Plus, X } from "lucide-react";
+
 type FoodLogProps = {
   caloricDeficit: number;
   setCaloricDeficit: React.Dispatch<React.SetStateAction<number>>;
@@ -52,6 +54,9 @@ export default function FoodLog(props: FoodLogProps) {
         .filter(([entry]) => entry.meal !== "")
         .map(([entry, index]) => (
         <li className="food-log-item" key={index}>
+            <span className="food-log-icon">
+                <Salad size={17} strokeWidth={2.25} />
+            </span>
             <div className="food-log-main">
                 <span className="food-name">{entry.meal}</span>
                 <span className="food-calories">{entry.grams}g &middot; {entry.calories} kcal</span>
@@ -67,7 +72,7 @@ export default function FoodLog(props: FoodLogProps) {
                 aria-label={`Remove ${entry.meal}`}
                 onClick={() => removeFoodLogEntry(index)}
             >
-                &times;
+                <X size={16} strokeWidth={2.5} />
             </button>
         </li>
     ))
@@ -77,7 +82,10 @@ export default function FoodLog(props: FoodLogProps) {
   return (
     <div className="food-log">
         <div className="card-header">
-            <h2>Food Log</h2>
+            <div className="card-title">
+                <UtensilsCrossed size={16} strokeWidth={2.25} />
+                <h2>Food Log</h2>
+            </div>
             {loggedMeals.length > 0 && (
                 <span className="card-header-meta">
                     {loggedMeals.length} {loggedMeals.length === 1 ? "meal" : "meals"}
@@ -110,7 +118,10 @@ export default function FoodLog(props: FoodLogProps) {
                 <label htmlFor="fats">Fats</label>
                 <input type="number" id="fats" name="fats" min={0} placeholder="0" />
             </div>
-            <button type="submit">Add meal</button>
+            <button type="submit">
+                <Plus size={15} strokeWidth={3} />
+                Add meal
+            </button>
         </form>
 
         {loggedMeals.length > 0 ? (
@@ -124,7 +135,10 @@ export default function FoodLog(props: FoodLogProps) {
                 </div>
             </>
         ) : (
-            <p className="food-log-empty">No meals logged yet — add your first one above.</p>
+            <p className="food-log-empty">
+                <UtensilsCrossed size={26} strokeWidth={1.75} />
+                No meals logged yet — add your first one above.
+            </p>
         )}
     </div>
   );
