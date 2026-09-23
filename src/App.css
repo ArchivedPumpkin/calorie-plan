@@ -1,3 +1,6 @@
+/* ==========================================================================
+   Layout — masthead, sticky stats rail, food-log column.
+   ========================================================================== */
 .app-shell {
   display: flex;
   flex-direction: column;
@@ -5,186 +8,339 @@
 }
 
 .app-header {
-  padding: 40px 0 8px;
-  text-align: center;
-}
-.app-subtitle {
-  color: var(--text);
-  font-size: 16px;
+  padding: 64px 0 36px;
+
+  @media (max-width: 720px) {
+    padding: 40px 0 26px;
+  }
 }
 
-.app-main {
+.app-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font: var(--label);
+  letter-spacing: var(--label-tracking);
+  text-transform: uppercase;
+  color: var(--accent);
+  background: var(--accent-soft);
+  border: 1px solid var(--accent-line);
+  border-radius: 999px;
+  padding: 6px 13px 6px 10px;
+  margin-bottom: 20px;
+}
+
+.app-subtitle {
+  max-width: 52ch;
+  color: var(--text);
+}
+
+.app-layout {
   flex: 1;
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  gap: 20px;
+  align-items: start;
+  padding-bottom: 64px;
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.app-rail {
+  position: sticky;
+  top: 24px;
+  align-self: start;
   display: flex;
   flex-direction: column;
   gap: 20px;
-  padding: 24px 0 48px;
+
+  @media (max-width: 900px) {
+    position: static;
+  }
 }
 
+.app-main {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Every panel is a raised charcoal surface. */
 .card {
   text-align: left;
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 24px;
-  box-shadow: var(--shadow);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 22px;
 }
 
 .card-header {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: space-between;
   gap: 12px;
-  margin-bottom: 16px;
+  margin-bottom: 20px;
+}
 
-  h2 {
-    margin: 0;
-  }
+/* Heading + its icon travel together. */
+.card-title {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: var(--accent);
+}
+
+.card-header-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font: var(--label);
+  letter-spacing: var(--label-tracking);
+  text-transform: uppercase;
+  color: var(--text-mute);
+  background: var(--surface-hi);
+  border-radius: 999px;
+  padding: 5px 11px;
+  white-space: nowrap;
 }
 
 .form-row {
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  margin-bottom: 16px;
+  gap: 0;
+  margin-bottom: 18px;
 }
 
 .form-actions {
   display: flex;
-  align-items: center;
-  gap: 12px;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
 }
 
+/* The target figure: condensed, tabular, accent-coloured. */
 .summary-value {
   display: flex;
-  align-items: baseline;
-  gap: 8px;
+  flex-direction: column;
 
   strong {
-    font-size: 28px;
-    color: var(--text-h);
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 52px;
+    line-height: 0.88;
+    letter-spacing: 0.01em;
+    color: var(--text-hi);
+    font-variant-numeric: tabular-nums;
   }
 
   span {
-    color: var(--text);
-    font-size: 14px;
+    font: var(--label);
+    letter-spacing: var(--label-tracking);
+    text-transform: uppercase;
+    color: var(--text-mute);
+    margin-top: 8px;
   }
 }
 
+/* ==========================================================================
+   Macro split — selectable option tiles.
+   ========================================================================== */
 .macro-cards {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-
-  @media (max-width: 720px) {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  @media (max-width: 480px) {
-    grid-template-columns: 1fr;
-  }
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .macro-card {
+  position: relative;
+  display: block;
+  width: 100%;
   text-align: left;
   padding: 0;
-  border-radius: 10px;
-  border: 2px solid var(--border);
-  background: var(--accent-bg);
-  box-shadow: var(--shadow);
-  cursor: pointer;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
   overflow: hidden;
-  transition: border-color 0.2s, transform 0.15s;
+  transition: border-color 0.15s, background 0.15s, transform 0.12s;
 
   &:hover {
-    border-color: var(--accent-border);
-    transform: translateY(-2px);
+    border-color: var(--line-strong);
+    transform: translateY(-1px);
   }
 
   &.selected {
     border-color: var(--accent);
+    background: var(--accent-soft);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
   }
 }
 
 .macro-card-badge {
-  background: var(--accent);
-  color: #fff;
-  font-size: 13px;
-  font-weight: 600;
-  padding: 6px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font: var(--label);
+  letter-spacing: var(--label-tracking);
+  text-transform: uppercase;
+  color: var(--text);
+  padding: 11px 13px;
+  border-bottom: 1px solid var(--line);
+}
+
+.macro-card.selected .macro-card-badge {
+  color: var(--accent);
+  border-bottom-color: var(--accent-line);
+}
+
+/* Tick only appears on the chosen split. */
+.macro-card-check {
+  display: none;
+  color: var(--accent);
+}
+.macro-card.selected .macro-card-check {
+  display: block;
 }
 
 .macro-card-body {
-  display: flex;
-  flex-direction: column;
-  padding: 0 16px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
 }
 
 .macro-stat {
   text-align: center;
-  padding: 14px 0;
-  border-bottom: 1px dashed var(--border);
+  padding: 13px 4px;
+  border-right: 1px solid var(--line);
 
   &:last-child {
-    border-bottom: none;
+    border-right: none;
   }
 
   strong {
     display: block;
-    font-size: 26px;
-    color: var(--text-h);
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 27px;
+    line-height: 1;
+    color: var(--text-hi);
+    font-variant-numeric: tabular-nums;
   }
 
   span {
-    font-size: 13px;
-    font-style: italic;
-    color: var(--text);
+    display: block;
+    font: var(--label);
+    letter-spacing: var(--label-tracking);
+    text-transform: uppercase;
+    font-style: normal;
+    color: var(--text-mute);
+    margin-top: 5px;
   }
+}
+
+/* ==========================================================================
+   Daily goals — calorie ring + macro meters.
+   ========================================================================== */
+/* Ring itself is react-circular-progressbar; colours come from buildStyles,
+   the glow is ours. */
+.calorie-ring {
+  width: 190px;
+  margin: 4px auto 24px;
+  aspect-ratio: 1;
+}
+
+.calorie-ring .CircularProgressbar-path {
+  filter: drop-shadow(0 0 7px var(--accent-glow));
+}
+
+.calorie-ring-figure {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 54px;
+  line-height: 0.9;
+  color: var(--text-hi);
+  font-variant-numeric: tabular-nums;
+}
+
+.calorie-ring-unit {
+  font: var(--label);
+  letter-spacing: var(--label-tracking);
+  text-transform: uppercase;
+  color: var(--text-mute);
+}
+
+.calorie-ring-pct {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 7px;
+  font: 700 12px/1 var(--sans);
+  letter-spacing: 0.06em;
+  color: var(--accent);
 }
 
 .stats-bars {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 17px;
+}
+
+.stat-bar {
+  --bar: var(--accent);
 }
 
 .stat-bar-header {
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  margin-bottom: 6px;
-  font-size: 14px;
+  gap: 10px;
+  margin-bottom: 8px;
 
   .stat-bar-label {
-    font-weight: 600;
-    color: var(--text-h);
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font: var(--label);
+    letter-spacing: var(--label-tracking);
+    text-transform: uppercase;
+    color: var(--bar);
+    margin: 0;
   }
 
   .stat-bar-value {
+    font-size: 13px;
+    font-weight: 500;
     color: var(--text);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
   }
 }
 
 .stat-bar-progress {
-  --bar: var(--accent);
-  --bar-bg: var(--accent-bg);
-
+  display: block;
   width: 100%;
-  height: 10px;
+  height: 7px;
   appearance: none;
   border: none;
   border-radius: 999px;
   overflow: hidden;
-  background: var(--bar-bg);
+  background: var(--surface-hi);
 
   &::-webkit-progress-bar {
-    background: var(--bar-bg);
+    background: var(--surface-hi);
     border-radius: 999px;
   }
 
   &::-webkit-progress-value {
     background: var(--bar);
     border-radius: 999px;
-    transition: width 0.3s ease;
+    box-shadow: 0 0 12px -2px var(--bar);
+    transition: width 0.4s cubic-bezier(0.22, 1, 0.36, 1);
   }
 
   &::-moz-progress-bar {
@@ -193,37 +349,29 @@
   }
 }
 
-.stat-bar-progress--protein {
+.stat-bar--protein {
   --bar: var(--protein);
-  --bar-bg: var(--protein-bg);
 }
-
-.stat-bar-progress--carbs {
+.stat-bar--carbs {
   --bar: var(--carbs);
-  --bar-bg: var(--carbs-bg);
 }
-
-.stat-bar-progress--fats {
+.stat-bar--fats {
   --bar: var(--fats);
-  --bar-bg: var(--fats-bg);
 }
 
-.card-header-meta {
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--text);
-  background: var(--code-bg);
-  border-radius: 999px;
-  padding: 3px 10px;
-  white-space: nowrap;
-}
-
+/* ==========================================================================
+   Food log.
+   ========================================================================== */
 .food-log-form {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
-  gap: 12px 14px;
+  grid-template-columns: repeat(auto-fit, minmax(104px, 1fr));
+  gap: 14px;
   align-items: end;
-  margin-bottom: 20px;
+  padding: 18px;
+  margin-bottom: 22px;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
 
   .form-row {
     margin-bottom: 0;
@@ -236,7 +384,7 @@
   button[type="submit"] {
     grid-column: 1 / -1;
     justify-self: end;
-    margin-top: 4px;
+    margin-top: 2px;
 
     @media (max-width: 480px) {
       justify-self: stretch;
@@ -256,54 +404,71 @@
 .food-log-item {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 10px 14px;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  transition: border-color 0.2s, background 0.2s;
+  gap: 14px;
+  padding: 13px 16px;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  transition: border-color 0.15s, background 0.15s;
 
   &:hover {
-    border-color: var(--accent-border);
-    background: var(--social-bg);
+    border-color: var(--line-strong);
+    background: var(--surface-hi);
+  }
+
+  .food-log-icon {
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    color: var(--accent);
+    background: var(--accent-soft);
   }
 
   .food-log-main {
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 3px;
     min-width: 0;
     flex: 1;
   }
 
   .food-name {
-    color: var(--text-h);
     font-weight: 500;
+    color: var(--text-hi);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
 
   .food-calories {
-    color: var(--text);
-    font-size: 14px;
+    font-size: 13px;
+    color: var(--text-mute);
+    font-variant-numeric: tabular-nums;
     white-space: nowrap;
   }
 
   @media (max-width: 560px) {
     flex-wrap: wrap;
 
-    .food-log-main {
-      flex: 1 1 100%;
+    .food-log-icon {
       order: 1;
     }
 
+    .food-log-main {
+      flex: 1;
+      order: 2;
+    }
+
     .macro-chips {
-      order: 3;
+      order: 4;
       flex: 1 1 100%;
     }
 
     .food-log-remove {
-      order: 2;
+      order: 3;
     }
   }
 }
@@ -315,52 +480,45 @@
 }
 
 .macro-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
   font-size: 12px;
   font-weight: 600;
-  letter-spacing: 0.2px;
   line-height: 1;
-  padding: 5px 9px;
+  padding: 6px 10px;
   border-radius: 999px;
   white-space: nowrap;
-  color: var(--chip-text);
-  background: var(--chip-bg);
-  border: 1px solid var(--chip-border);
+  color: var(--chip-ink);
+  background: color-mix(in srgb, var(--chip-ink) 12%, transparent);
+  font-variant-numeric: tabular-nums;
 }
 
 .macro-chip--protein {
-  --chip-text: var(--protein);
-  --chip-bg: var(--protein-bg);
-  --chip-border: var(--protein-border);
+  --chip-ink: var(--protein);
 }
-
 .macro-chip--carbs {
-  --chip-text: var(--carbs);
-  --chip-bg: var(--carbs-bg);
-  --chip-border: var(--carbs-border);
+  --chip-ink: var(--carbs);
 }
-
 .macro-chip--fats {
-  --chip-text: var(--fats);
-  --chip-bg: var(--fats-bg);
-  --chip-border: var(--fats-border);
+  --chip-ink: var(--fats);
 }
 
 .food-log-remove {
+  display: grid;
+  place-items: center;
   background: none;
   border: none;
-  color: var(--text);
-  font-size: 20px;
-  line-height: 1;
-  width: 28px;
-  height: 28px;
+  color: var(--text-mute);
+  width: 30px;
+  height: 30px;
   flex-shrink: 0;
-  border-radius: 999px;
-  cursor: pointer;
-  transition: color 0.2s, background 0.2s;
+  border-radius: 50%;
+  transition: color 0.15s, background 0.15s;
 
   &:hover {
-    color: var(--accent);
-    background: var(--accent-bg);
+    color: var(--protein);
+    background: color-mix(in srgb, var(--protein) 14%, transparent);
   }
 
   &:focus-visible {
@@ -370,18 +528,41 @@
 }
 
 .food-log-empty {
-  color: var(--text);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
   font-size: 14px;
+  color: var(--text-mute);
   text-align: center;
-  padding: 12px 0;
+  padding: 44px 20px;
+  border: 1px dashed var(--line-strong);
+  border-radius: var(--radius-sm);
+}
+
+.food-log-empty .lucide {
+  color: var(--line-strong);
 }
 
 .food-log-total {
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  margin-top: 16px;
-  padding-top: 16px;
-  border-top: 1px solid var(--border);
-  font-weight: 600;
-  color: var(--text-h);
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+  font: var(--label);
+  letter-spacing: var(--label-tracking);
+  text-transform: uppercase;
+  color: var(--text-mute);
+
+  span:last-child {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 30px;
+    line-height: 1;
+    letter-spacing: 0.01em;
+    color: var(--accent);
+    font-variant-numeric: tabular-nums;
+  }
 }

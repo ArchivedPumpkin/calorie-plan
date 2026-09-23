@@ -1,4 +1,5 @@
 import React from "react";
+import { Target, Pencil } from "lucide-react";
 
 // This component should return a form for the user to input their desired caloric deficit in calories per day.
 
@@ -18,7 +19,10 @@ export default function CaloricDeficit(props: CaloricDeficitProps) {
   return (
     <div>
       <div className="card-header">
-        <h2>Caloric Deficit</h2>
+        <div className="card-title">
+          <Target size={16} strokeWidth={2.25} />
+          <h2>Caloric Deficit</h2>
+        </div>
       </div>
       {props.caloricDeficit !== 0 ? (
         <div className="form-actions">
@@ -31,6 +35,7 @@ export default function CaloricDeficit(props: CaloricDeficitProps) {
             className="btn-link"
             onClick={() => props.setCaloricDeficit(0)}
           >
+            <Pencil size={12} strokeWidth={2.5} />
             Edit
           </button>
         </div>

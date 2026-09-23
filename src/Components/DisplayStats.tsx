@@ -1,3 +1,7 @@
+import { Activity, Drumstick, Wheat, Droplets, TrendingUp } from "lucide-react";
+import { CircularProgressbarWithChildren, buildStyles } from "react-circular-progressbar";
+import "react-circular-progressbar/dist/styles.css";
+
 type DisplayStatsProps = {
   caloricDeficit: number;
   foodLog: {
@@ -26,39 +30,70 @@ export default function DisplayStats(props: DisplayStatsProps) {
   const totalCarbs = props.foodLog.reduce((sum, entry) => sum + entry.carbs, 0);
   const totalFats = props.foodLog.reduce((sum, entry) => sum + entry.fats, 0);
 
+  // Clamped so an overshoot never draws the ring past a full turn.
+  const caloriePercent = props.caloricDeficit > 0
+    ? Math.min(1, totalCalories / props.caloricDeficit)
+    : 0;
+
   return (
     <div>
       <div className="card-header">
-        <h2>Daily Goals</h2>
-      </div>
-      <div className="stats-bars">
-        <div className="stat-bar">
-          <div className="stat-bar-header">
-            <label htmlFor="calories" className="stat-bar-label">Calories</label>
-            <span className="stat-bar-value">{totalCalories} / {props.caloricDeficit} kcal</span>
-          </div>
-          <progress id="calories" className="stat-bar-progress" value={totalCalories} max={props.caloricDeficit} />
+        <div className="card-title">
+          <Activity size={16} strokeWidth={2.25} />
+          <h2>Daily Goals</h2>
         </div>
-        <div className="stat-bar">
+      </div>
+
+      <div className="calorie-ring">
+        <CircularProgressbarWithChildren
+          value={caloriePercent * 100}
+          strokeWidth={9}
+          styles={buildStyles({
+            pathColor: "var(--accent)",
+            trailColor: "var(--surface-hi)",
+            strokeLinecap: "round",
+            pathTransitionDuration: 0.5,
+          })}
+        >
+          <span className="calorie-ring-figure">{totalCalories}</span>
+          <span className="calorie-ring-unit">of {props.caloricDeficit} kcal</span>
+          <span className="calorie-ring-pct">
+            <TrendingUp size={13} strokeWidth={2.75} />
+            {Math.round(caloriePercent * 100)}%
+          </span>
+        </CircularProgressbarWithChildren>
+      </div>
+
+      <div className="stats-bars">
+        <div className="stat-bar stat-bar--protein">
           <div className="stat-bar-header">
-            <label htmlFor="protein" className="stat-bar-label">Protein</label>
+            <label htmlFor="protein" className="stat-bar-label">
+              <Drumstick size={13} strokeWidth={2.5} />
+              Protein
+            </label>
             <span className="stat-bar-value">{totalProtein} / {props.macros.protein} g</span>
           </div>
-          <progress id="protein" className="stat-bar-progress stat-bar-progress--protein" value={totalProtein} max={props.macros.protein} />
+          <progress id="protein" className="stat-bar-progress" value={totalProtein} max={props.macros.protein} />
         </div>
-        <div className="stat-bar">
+        <div className="stat-bar stat-bar--carbs">
           <div className="stat-bar-header">
-            <label htmlFor="carbs" className="stat-bar-label">Carbs</label>
+            <label htmlFor="carbs" className="stat-bar-label">
+              <Wheat size={13} strokeWidth={2.5} />
+              Carbs
+            </label>
             <span className="stat-bar-value">{totalCarbs} / {props.macros.carbs} g</span>
           </div>
-          <progress id="carbs" className="stat-bar-progress stat-bar-progress--carbs" value={totalCarbs} max={props.macros.carbs} />
+          <progress id="carbs" className="stat-bar-progress" value={totalCarbs} max={props.macros.carbs} />
         </div>
-        <div className="stat-bar">
+        <div className="stat-bar stat-bar--fats">
           <div className="stat-bar-header">
-            <label htmlFor="fats" className="stat-bar-label">Fats</label>
+            <label htmlFor="fats" className="stat-bar-label">
+              <Droplets size={13} strokeWidth={2.5} />
+              Fats
+            </label>
             <span className="stat-bar-value">{totalFats} / {props.macros.fats} g</span>
           </div>
-          <progress id="fats" className="stat-bar-progress stat-bar-progress--fats" value={totalFats} max={props.macros.fats} />
+          <progress id="fats" className="stat-bar-progress" value={totalFats} max={props.macros.fats} />
         </div>
       </div>
     </div>
