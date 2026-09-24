@@ -1,4 +1,6 @@
 import { UtensilsCrossed, Salad, Plus, X } from "lucide-react";
+import ScanLabel from "./ScanLabel";
+import React from "react";
 
 type FoodLogProps = {
   caloricDeficit: number;
@@ -25,6 +27,8 @@ type FoodLogProps = {
 
 
 export default function FoodLog(props: FoodLogProps) {
+
+    const [file, setFile] = React.useState<File | null>(null)
 
     function submitFoodLog(e: React.FormEvent<HTMLFormElement>){
         e.preventDefault();
@@ -86,11 +90,17 @@ export default function FoodLog(props: FoodLogProps) {
                 <UtensilsCrossed size={16} strokeWidth={2.25} />
                 <h2>Food Log</h2>
             </div>
-            {loggedMeals.length > 0 && (
-                <span className="card-header-meta">
-                    {loggedMeals.length} {loggedMeals.length === 1 ? "meal" : "meals"}
-                </span>
-            )}
+            <div className="card-header-actions">
+                <ScanLabel 
+                    file={file}
+                    setFile={setFile}
+                />
+                {loggedMeals.length > 0 && (
+                    <span className="card-header-meta">
+                        {loggedMeals.length} {loggedMeals.length === 1 ? "meal" : "meals"}
+                    </span>
+                )}
+            </div>
         </div>
 
         <form className="food-log-form" onSubmit={submitFoodLog}>
