@@ -30,6 +30,39 @@ export default function FoodLog(props: FoodLogProps) {
 
     const [file, setFile] = React.useState<File | null>(null)
 
+    React.useEffect(() => {
+        if (!file) return;
+
+        async function processFile(file: File) {
+            const reader = new FileReader()
+            try {
+                const readerResult = await new Promise((resolve, reject) => {
+                    reader.onload = () => {resolve(reader.result)}
+                    reader.onerror = (error) => {reject(error)}
+                    reader.readAsDataURL(file)
+                })
+                console.log("Reader result:", readerResult)
+
+                const post = fetch("http://localhost:8000/api/scan-label", {
+                    method: "POST",
+                    headers: {"Content-Type": "application/json"},
+                    body: JSON.stringify({file: readerResult})
+                })
+
+                const response = await post
+                const data = await response.json()
+                console.log("Response data:", data)
+
+            } catch (error) {
+                console.error("Error reading file:", error)
+            }
+        }
+
+        processFile(file)
+
+
+    },[file])
+
     function submitFoodLog(e: React.FormEvent<HTMLFormElement>){
         e.preventDefault();
 
