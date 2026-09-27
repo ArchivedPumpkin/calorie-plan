@@ -24,6 +24,7 @@ const PORT = 8000
 app.post('/api/scan-label', async (req, res) => {
     console.log("Received a request to scan a label")
     console.log("Request body:", req.body)
+
     const labelSchema = z.object( {
         meal: z.string(),
         grams: z.number(),
@@ -48,7 +49,10 @@ app.post('/api/scan-label', async (req, res) => {
         }
         });
 
-        res.json({ message: "Label scanned successfully", output: interaction.output_text })
+        const parsedOutput = JSON.parse(interaction.output_text)
+        const parsedSchmema = labelSchema.parse(parsedOutput)
+
+        res.json({ message: "Label scanned successfully", output: parsedSchmema })
 
     } catch (error) {
         console.error("Error scanning label:", error)
