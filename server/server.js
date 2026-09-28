@@ -37,7 +37,7 @@ app.post('/api/scan-label', async (req, res) => {
         const base64Data = req.body.file.split(",")[1]
 
         const interaction = await ai.interactions.create({
-        model: "gemini-3.8-flash",
+        model: "gemini-3.5-flash-lite",
         input: [
             { type: "text", text: "Extract macros from this nutrition label..." },
             { type: "image", data: base64Data, mime_type: "image/png" },

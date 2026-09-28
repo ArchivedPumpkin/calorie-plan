@@ -24,16 +24,38 @@ type FoodLogProps = {
   }[]>>;
 };
 
+type ScannedLabel = {
+    meal: string;
+    grams: number;
+    calories: number;
+    protein: number;
+    carbs: number;
+    fats: number;
+}
+
+type ScannedLabelResponse = {
+    message: string;
+    output: ScannedLabel;
+}
 
 
 export default function FoodLog(props: FoodLogProps) {
 
     const [file, setFile] = React.useState<File | null>(null)
+    const [scannedLabel, setScannedLabel] = React.useState<(ScannedLabel | null)>(null)
+    const [formState, setFormState] = React.useState({
+        meal: "",
+        grams: 0,
+        calories: 0,
+        protein: 0,
+        carbs: 0,
+        fats: 0,
+    })
 
     React.useEffect(() => {
         if (!file) return;
 
-        async function processFile(file: File) {
+        async function processFile(file: File): Promise<void> {
             const reader = new FileReader()
             try {
                 const readerResult = await new Promise((resolve, reject) => {
@@ -50,8 +72,9 @@ export default function FoodLog(props: FoodLogProps) {
                 })
 
                 const response = await post
-                const data = await response.json()
+                const data: ScannedLabelResponse = await response.json()
                 console.log("Response data:", data)
+                setScannedLabel(data.output)
 
             } catch (error) {
                 console.error("Error reading file:", error)
@@ -63,21 +86,27 @@ export default function FoodLog(props: FoodLogProps) {
 
     },[file])
 
+    React.useEffect(() => {
+        if(scannedLabel) {
+            setFormState(scannedLabel)
+        }
+    }, [scannedLabel])
+
+    console.log("Scanned label:", scannedLabel)
+
     function submitFoodLog(e: React.FormEvent<HTMLFormElement>){
         e.preventDefault();
 
-        const form = e.currentTarget
-        const formData = new FormData(form)
-        const meal = formData.get("meal") as string
-        const grams = Number(formData.get("grams"))
-        const calories = Number(formData.get("calories"))
-        const protein = Number(formData.get("protein"))
-        const carbs = Number(formData.get("carbs"))
-        const fats = Number(formData.get("fats"))
-
-        props.setFoodLog(prev => [...prev, { meal, grams, calories, protein, carbs, fats } ])
-        props.setCaloricDeficit(prev => prev - calories)
-        form.reset()
+        props.setFoodLog(prev => [...prev, formState ])
+        props.setCaloricDeficit(prev => prev - formState.calories)
+        setFormState({
+            meal: "",
+            grams: 0,
+            calories: 0,
+            protein: 0,
+            carbs: 0,
+            fats: 0,
+        })
     }
 
     function removeFoodLogEntry(index:number) {
@@ -116,6 +145,17 @@ export default function FoodLog(props: FoodLogProps) {
 
     const totalCalories = loggedMeals.reduce((sum, entry) => sum + entry.calories, 0)
 
+    function handleInputChange(e: React.ChangeEvent<HTMLInputElement>) {
+        const { name, value } = e.target
+        setFormState(prevForm => (
+            {
+                ...prevForm,
+                [name]: value,
+            }
+        ))
+    }
+
+
   return (
     <div className="food-log">
         <div className="card-header">
@@ -139,27 +179,27 @@ export default function FoodLog(props: FoodLogProps) {
         <form className="food-log-form" onSubmit={submitFoodLog}>
             <div className="form-row form-row--wide">
                 <label htmlFor="meal">Meal</label>
-                <input type="text" id="meal" name="meal" placeholder="e.g. Chicken &amp; rice" required />
+                <input type="text" id="meal" name="meal" placeholder="e.g. Chicken &amp; rice" required value={formState.meal} onChange={handleInputChange}/>
             </div>
             <div className="form-row">
                 <label htmlFor="grams">Grams</label>
-                <input type="number" id="grams" name="grams" min={0} placeholder="0" />
+                <input type="number" id="grams" name="grams" min={0} placeholder="0" value={formState.grams} onChange={handleInputChange} />
             </div>
             <div className="form-row">
                 <label htmlFor="calories">Calories</label>
-                <input type="number" id="calories" name="calories" min={0} placeholder="0" />
+                <input type="number" id="calories" name="calories" min={0} placeholder="0" value={formState.calories} onChange={handleInputChange} />
             </div>
             <div className="form-row">
                 <label htmlFor="protein">Protein</label>
-                <input type="number" id="protein" name="protein" min={0} placeholder="0" />
+                <input type="number" id="protein" name="protein" min={0} placeholder="0" value={formState.protein} onChange={handleInputChange} />
             </div>
             <div className="form-row">
                 <label htmlFor="carbs">Carbs</label>
-                <input type="number" id="carbs" name="carbs" min={0} placeholder="0" />
+                <input type="number" id="carbs" name="carbs" min={0} placeholder="0" value={formState.carbs} onChange={handleInputChange} />
             </div>
             <div className="form-row">
                 <label htmlFor="fats">Fats</label>
-                <input type="number" id="fats" name="fats" min={0} placeholder="0" />
+                <input type="number" id="fats" name="fats" min={0} placeholder="0" value={formState.fats} onChange={handleInputChange} />
             </div>
             <button type="submit">
                 <Plus size={15} strokeWidth={3} />
