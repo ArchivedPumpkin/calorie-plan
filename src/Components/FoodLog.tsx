@@ -52,6 +52,7 @@ export default function FoodLog(props: FoodLogProps) {
         fats: 0,
     })
     const [isScanning, setIsScanning] = React.useState<(boolean)>(false)
+    const [scanError, setScanError] = React.useState<boolean>(false)
 
     React.useEffect(() => {
         if (!file) return;
@@ -81,6 +82,8 @@ export default function FoodLog(props: FoodLogProps) {
 
             } catch (error) {
                 console.error("Error reading file:", error)
+                setScanError(true)
+                setIsScanning(false)
             }
         }
 
@@ -167,6 +170,11 @@ export default function FoodLog(props: FoodLogProps) {
                 <h2>Food Log</h2>
             </div>
             <div className="card-header-actions">
+                {scanError && (
+                    <span className="card-header-meta" style={{ color: "var(--protein)" }}>
+                        Failed to scan the label. Please try again.
+                    </span>
+                )}
                 <ScanLabel 
                     file={file}
                     setFile={setFile}
