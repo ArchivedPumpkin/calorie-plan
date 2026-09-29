@@ -1,9 +1,10 @@
-import { Camera } from "lucide-react";
+import { Camera, LoaderPinwheel  } from "lucide-react";
 import React from "react";
 
 type ScanLabelProps = {
     file: File | null;
     setFile: React.Dispatch<React.SetStateAction<File | null>>;
+    isScanning: boolean;
 }
 
 export default function ScanLabel(props: ScanLabelProps) {
@@ -13,11 +14,21 @@ export default function ScanLabel(props: ScanLabelProps) {
             props.setFile(e.target.files[0])
         }
     }
-
+    
     return (
-        <label className="scan-label-icon" title="Scan a nutrition label">
-            <Camera size={16} strokeWidth={2.25} />
-            <input type="file" accept="image/*" capture="environment" onChange={handleFileChange} />
-        </label>
+        <>
+        {!props.isScanning ? 
+            <label className="scan-label-icon" title="Scan a nutrition label">
+                <Camera size={16} strokeWidth={2.25} />
+                <input type="file" accept="image/*" capture="environment" onChange={handleFileChange} />
+            </label>
+        : 
+            <label className="scan-label-icon" title="Scan a nutrition label">
+                <LoaderPinwheel size={16} strokeWidth={2.25} className="spin" />
+                <input type="file" accept="image/*" capture="environment" onChange={handleFileChange} />
+            </label>    
+
+        }
+        </>
     );
 }

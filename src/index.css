@@ -1,7 +1,4 @@
-/* ==========================================================================
-   Design tokens — dark athletic. Charcoal surfaces, one electric accent,
-   a distinct hue per macro, condensed display numerals.
-   ========================================================================== */
+
 :root {
   --bg: #0b0d10;
   --surface: #14171c;

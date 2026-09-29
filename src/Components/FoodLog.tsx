@@ -51,6 +51,7 @@ export default function FoodLog(props: FoodLogProps) {
         carbs: 0,
         fats: 0,
     })
+    const [isScanning, setIsScanning] = React.useState<(boolean)>(false)
 
     React.useEffect(() => {
         if (!file) return;
@@ -58,6 +59,7 @@ export default function FoodLog(props: FoodLogProps) {
         async function processFile(file: File): Promise<void> {
             const reader = new FileReader()
             try {
+                setIsScanning(true)
                 const readerResult = await new Promise((resolve, reject) => {
                     reader.onload = () => {resolve(reader.result)}
                     reader.onerror = (error) => {reject(error)}
@@ -75,6 +77,7 @@ export default function FoodLog(props: FoodLogProps) {
                 const data: ScannedLabelResponse = await response.json()
                 console.log("Response data:", data)
                 setScannedLabel(data.output)
+                setIsScanning(false)
 
             } catch (error) {
                 console.error("Error reading file:", error)
@@ -167,6 +170,7 @@ export default function FoodLog(props: FoodLogProps) {
                 <ScanLabel 
                     file={file}
                     setFile={setFile}
+                    isScanning={isScanning}
                 />
                 {loggedMeals.length > 0 && (
                     <span className="card-header-meta">
