@@ -76,6 +76,11 @@ export default function FoodLog(props: FoodLogProps) {
 
                 const response = await post
                 const data: ScannedLabelResponse = await response.json()
+
+                if (!response.ok) {
+                    throw new Error(data.message ?? "Scan failed")
+                }
+
                 console.log("Response data:", data)
                 setScannedLabel(data.output)
                 setIsScanning(false)
@@ -100,7 +105,7 @@ export default function FoodLog(props: FoodLogProps) {
 
     console.log("Scanned label:", scannedLabel)
 
-    function submitFoodLog(e: React.FormEvent<HTMLFormElement>){
+    function submitFoodLog(e: React.SubmitEvent<HTMLFormElement>){
         e.preventDefault();
 
         props.setFoodLog(prev => [...prev, formState ])
