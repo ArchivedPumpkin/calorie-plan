@@ -31,7 +31,8 @@ app.post('/api/scan-label', async (req, res) => {
         calories: z.number(),
         protein: z.number(),
         carbs: z.number(),
-        fats: z.number()
+        fats: z.number(),
+        found: z.boolean()
     })
     try {
         const base64Data = req.body.file.split(",")[1]
@@ -40,6 +41,7 @@ app.post('/api/scan-label', async (req, res) => {
         model: "gemini-3.5-flash-lite",
         input: [
             { type: "text", text: "Extract macros from this nutrition label..." },
+            { type: "text", text: "Set found to true if the label is successfully extracted. Otherwise, set it to false."},
             { type: "image", data: base64Data, mime_type: "image/png" },
         ],
         response_format: {
@@ -51,8 +53,15 @@ app.post('/api/scan-label', async (req, res) => {
 
         const parsedOutput = JSON.parse(interaction.output_text)
         const parsedSchmema = labelSchema.parse(parsedOutput)
+        const { found, ...label} = parsedSchmema
 
-        res.json({ message: "Label scanned successfully", output: parsedSchmema })
+         if (!parsedSchmema.found) {
+            return res.status(422).json({message: "Label not found or could not be extracted"})
+        }
+
+        res.json({ message: "Label scanned successfully", output: label })
+
+       
 
     } catch (error) {
         console.error("Error scanning label:", error)

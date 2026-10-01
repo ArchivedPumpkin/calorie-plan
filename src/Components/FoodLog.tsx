@@ -61,6 +61,7 @@ export default function FoodLog(props: FoodLogProps) {
             const reader = new FileReader()
             try {
                 setIsScanning(true)
+                setScanError(false)
                 const readerResult = await new Promise((resolve, reject) => {
                     reader.onload = () => {resolve(reader.result)}
                     reader.onerror = (error) => {reject(error)}
