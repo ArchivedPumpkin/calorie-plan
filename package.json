@@ -22,14 +22,19 @@
     "start": "node server/server.js"
   },
   "dependencies": {
+    "@apollo/client": "^4.3.1",
+    "@apollo/server": "^5.5.1",
+    "@as-integrations/express5": "^1.1.2",
     "@google/genai": "^2.24.0",
     "cors": "^2.8.6",
     "dotenv": "^18.0.4",
     "express": "^5.2.1",
+    "graphql": "^16.14.2",
     "lucide-react": "^1.47.0",
     "react": "^19.2.8",
     "react-circular-progressbar": "^2.2.0",
     "react-dom": "^19.2.8",
+    "rxjs": "^7.8.2",
     "zod": "^4.6.5"
   },
   "devDependencies": {
