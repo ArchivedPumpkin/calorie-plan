@@ -1,6 +1,7 @@
 import { UtensilsCrossed, Salad, Plus, X } from "lucide-react";
 import ScanLabel from "./ScanLabel";
 import React from "react";
+import FoodSearch, { type Food } from "./FoodSearch";
 
 type FoodLogProps = {
     caloricDeficit: number;
@@ -168,6 +169,19 @@ export default function FoodLog(props: FoodLogProps) {
         ))
     }
 
+    function handleSelectedFood(food: Food) {
+        setFormState(prev => (
+            {
+                ...prev,
+                meal: food.name,
+                calories: food.calories,
+                protein: food.protein,
+                carbs: food.carbs,
+                fats: food.fats,
+            }
+        ))
+    }
+
     const factor = formState.grams / 100
     const totals = {
         calories: Math.round(formState.calories * factor),
@@ -202,6 +216,10 @@ export default function FoodLog(props: FoodLogProps) {
                     )}
                 </div>
             </div>
+
+            <FoodSearch
+                onSelectFood={handleSelectedFood}
+            />
 
             <form className="food-log-form" onSubmit={submitFoodLog}>
                 <div className="form-row form-row--wide">
