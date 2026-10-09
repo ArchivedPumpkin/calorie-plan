@@ -635,9 +635,21 @@
   color: var(--protein);
 }
 
+.food-search-results-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 10px;
+  font: var(--label);
+  letter-spacing: var(--label-tracking);
+  text-transform: uppercase;
+  color: var(--text-mute);
+}
+
 .food-search-results {
   list-style: none;
-  margin: 10px 0 0;
+  margin: 6px 0 0;
   padding: 0;
   display: flex;
   flex-direction: column;
@@ -698,6 +710,16 @@
   }
 }
 
+.food-log .card-header {
+  flex-wrap: wrap;
+  row-gap: 12px;
+}
+
+.food-log-manual-toggle {
+  height: 32px;
+  white-space: nowrap;
+}
+
 /* ==========================================================================
    Scan label — icon button that opens the camera / file picker.
    ========================================================================== */
@@ -709,21 +731,11 @@
 
 .scan-label-icon {
   position: relative;
-  display: grid;
-  place-items: center;
-  width: 30px;
-  height: 30px;
+  height: 32px;
+  margin: 0;
   flex-shrink: 0;
-  border-radius: 50%;
-  color: var(--text-mute);
-  background: var(--surface-hi);
+  white-space: nowrap;
   cursor: pointer;
-  transition: color 0.15s, background 0.15s;
-
-  &:hover {
-    color: var(--accent);
-    background: var(--accent-soft);
-  }
 
   &:focus-within {
     outline: 2px solid var(--accent);

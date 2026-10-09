@@ -1,4 +1,4 @@
-import { Camera, LoaderPinwheel  } from "lucide-react";
+import { Camera, LoaderPinwheel } from "lucide-react";
 import React from "react";
 
 type ScanLabelProps = {
@@ -14,21 +14,14 @@ export default function ScanLabel(props: ScanLabelProps) {
             props.setFile(e.target.files[0])
         }
     }
-    
-    return (
-        <>
-        {!props.isScanning ? 
-            <label className="scan-label-icon" title="Scan a nutrition label">
-                <Camera size={16} strokeWidth={2.25} />
-                <input type="file" accept="image/*" capture="environment" onChange={handleFileChange} />
-            </label>
-        : 
-            <label className="scan-label-icon" title="Scan a nutrition label">
-                <LoaderPinwheel size={16} strokeWidth={2.25} className="spin" />
-                <input type="file" accept="image/*" capture="environment" onChange={handleFileChange} />
-            </label>    
 
-        }
-        </>
+    return (
+        <label className="btn-link scan-label-icon" title="Scan a nutrition label with your camera">
+            {props.isScanning
+                ? <LoaderPinwheel size={13} strokeWidth={2.5} className="spin" />
+                : <Camera size={13} strokeWidth={2.5} />}
+            {props.isScanning ? "Scanning…" : "Scan label"}
+            <input type="file" accept="image/*" capture="environment" onChange={handleFileChange} />
+        </label>
     );
 }

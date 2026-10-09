@@ -1,5 +1,5 @@
 import React from 'react';
-import { Search } from 'lucide-react';
+import { Search, X } from 'lucide-react';
 import { gql } from '@apollo/client';
 import { useLazyQuery } from '@apollo/client/react'
 import type { TypedDocumentNode } from '@apollo/client';
@@ -61,7 +61,14 @@ export default function FoodSearch(props: FoodSearchProps) {
     return (
         <div className="food-search">
             <form className="food-search-form" onSubmit={handleSearch}>
-                <input type="text" value={query} placeholder="Search foods, e.g. banana" aria-label="Search foods" onChange={e => setQuery(e.target.value)} />
+                <input
+                    type="text"
+                    value={query}
+                    placeholder="Search foods, e.g. banana"
+                    aria-label="Search foods"
+                    onChange={e => setQuery(e.target.value)}
+                    onKeyDown={e => { if (e.key === "Escape") setShowResults(false) }}
+                />
                 <button type="submit" className="btn-link">
                     <Search size={13} strokeWidth={2.5} />
                     Search
@@ -71,6 +78,18 @@ export default function FoodSearch(props: FoodSearchProps) {
             {loading && <p className="food-search-status">Searching…</p>}
             {error && <p className="food-search-status food-search-status--error">Couldn't search foods. Please try again.</p>}
             {showResults && data?.searchFoods && data.searchFoods.length > 0 && (
+                <>
+                <div className="food-search-results-header">
+                    <span>{data.searchFoods.length} {data.searchFoods.length === 1 ? "result" : "results"}</span>
+                    <button
+                        type="button"
+                        className="food-log-remove"
+                        aria-label="Close search results"
+                        onClick={() => setShowResults(false)}
+                    >
+                        <X size={16} strokeWidth={2.5} />
+                    </button>
+                </div>
                 <ul className="food-search-results">
                     {data.searchFoods.map(food => (
                         <li key={food.id}>
@@ -92,6 +111,7 @@ export default function FoodSearch(props: FoodSearchProps) {
                         </li>
                     ))}
                 </ul>
+                </>
             )}
             {showResults && data?.searchFoods?.length === 0 && <p className="food-search-status">No foods found.</p>}
         </div>

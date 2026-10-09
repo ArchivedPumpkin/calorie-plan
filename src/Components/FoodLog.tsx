@@ -1,4 +1,4 @@
-import { UtensilsCrossed, Salad, Plus, X } from "lucide-react";
+import { UtensilsCrossed, Salad, Plus, X, Pencil } from "lucide-react";
 import ScanLabel from "./ScanLabel";
 import React from "react";
 import FoodSearch, { type Food } from "./FoodSearch";
@@ -46,6 +46,7 @@ export default function FoodLog(props: FoodLogProps) {
     const [scannedLabel, setScannedLabel] = React.useState<(ScannedLabel | null)>(null)
     const [isScanning, setIsScanning] = React.useState<(boolean)>(false)
     const [scanError, setScanError] = React.useState<boolean>(false)
+    const [showForm, setShowForm] = React.useState<boolean>(false)
     const [formState, setFormState] = React.useState({
         meal: "",
         grams: 0,
@@ -87,6 +88,7 @@ export default function FoodLog(props: FoodLogProps) {
                 console.log("Response data:", data)
                 setScannedLabel(data.output)
                 setIsScanning(false)
+                setShowForm(true)
 
             } catch (error) {
                 console.error("Error reading file:", error)
@@ -121,6 +123,7 @@ export default function FoodLog(props: FoodLogProps) {
             carbs: 0,
             fats: 0,
         })
+        setShowForm(false)
     }
 
     function removeFoodLogEntry(index: number) {
@@ -180,6 +183,7 @@ export default function FoodLog(props: FoodLogProps) {
                 fats: food.fats,
             }
         ))
+        setShowForm(true)
     }
 
     const factor = formState.grams / 100
@@ -204,6 +208,15 @@ export default function FoodLog(props: FoodLogProps) {
                             Failed to scan the label. Please try again.
                         </span>
                     )}
+                    <button
+                        type="button"
+                        className="btn-link food-log-manual-toggle"
+                        aria-expanded={showForm}
+                        onClick={() => setShowForm(prev => !prev)}
+                    >
+                        {showForm ? <X size={13} strokeWidth={2.5} /> : <Pencil size={13} strokeWidth={2.5} />}
+                        {showForm ? "Cancel" : "Add manually"}
+                    </button>
                     <ScanLabel
                         file={file}
                         setFile={setFile}
@@ -221,48 +234,49 @@ export default function FoodLog(props: FoodLogProps) {
                 onSelectFood={handleSelectedFood}
             />
 
-            <form className="food-log-form" onSubmit={submitFoodLog}>
-                <div className="form-row form-row--wide">
-                    <label htmlFor="meal">Meal</label>
-                    <input type="text" id="meal" name="meal" placeholder="e.g. Chicken &amp; rice" required value={formState.meal} onChange={handleInputChange} />
-                </div>
-                <div className="form-row">
-                    <label htmlFor="calories">Kcal / 100g</label>
-                    <input type="number" id="calories" name="calories" step="any" min={0} placeholder="0" value={formState.calories} onChange={handleInputChange} />
-                </div>
-                <div className="form-row">
-                    <label htmlFor="protein">Protein / 100g</label>
-                    <input type="number" id="protein" name="protein" step="any" min={0} placeholder="0" value={formState.protein} onChange={handleInputChange} />
-                </div>
-                <div className="form-row">
-                    <label htmlFor="carbs">Carbs / 100g</label>
-                    <input type="number" id="carbs" name="carbs" step="any" min={0} placeholder="0" value={formState.carbs} onChange={handleInputChange} />
-                </div>
-                <div className="form-row">
-                    <label htmlFor="fats">Fats / 100g</label>
-                    <input type="number" id="fats" name="fats" min={0} step="any" placeholder="0" value={formState.fats} onChange={handleInputChange} />
-                </div>
-                <div className="form-row">
-                    <label htmlFor="grams">Amount (g)</label>
-                    <input type="number" id="grams" name="grams" step="any" min={0} placeholder="0" value={formState.grams} onChange={handleInputChange} />
-                </div>
-                <div className="food-log-form-footer">
-                    {formState.grams > 0 && (
-                        <div className="food-log-preview">
-                            <span className="food-log-preview-kcal">{totals.calories} kcal</span>
-                            <div className="macro-chips">
-                                <span className="macro-chip macro-chip--protein">{totals.protein}g P</span>
-                                <span className="macro-chip macro-chip--carbs">{totals.carbs}g C</span>
-                                <span className="macro-chip macro-chip--fats">{totals.fats}g F</span>
+            {showForm &&
+                <form className="food-log-form" onSubmit={submitFoodLog}>
+                    <div className="form-row form-row--wide">
+                        <label htmlFor="meal">Meal</label>
+                        <input type="text" id="meal" name="meal" placeholder="e.g. Chicken &amp; rice" required value={formState.meal} onChange={handleInputChange} />
+                    </div>
+                    <div className="form-row">
+                        <label htmlFor="calories">Kcal / 100g</label>
+                        <input type="number" id="calories" name="calories" step="any" min={0} placeholder="0" value={formState.calories} onChange={handleInputChange} />
+                    </div>
+                    <div className="form-row">
+                        <label htmlFor="protein">Protein / 100g</label>
+                        <input type="number" id="protein" name="protein" step="any" min={0} placeholder="0" value={formState.protein} onChange={handleInputChange} />
+                    </div>
+                    <div className="form-row">
+                        <label htmlFor="carbs">Carbs / 100g</label>
+                        <input type="number" id="carbs" name="carbs" step="any" min={0} placeholder="0" value={formState.carbs} onChange={handleInputChange} />
+                    </div>
+                    <div className="form-row">
+                        <label htmlFor="fats">Fats / 100g</label>
+                        <input type="number" id="fats" name="fats" min={0} step="any" placeholder="0" value={formState.fats} onChange={handleInputChange} />
+                    </div>
+                    <div className="form-row">
+                        <label htmlFor="grams">Amount (g)</label>
+                        <input type="number" id="grams" name="grams" step="any" min={0} placeholder="0" value={formState.grams} onChange={handleInputChange} />
+                    </div>
+                    <div className="food-log-form-footer">
+                        {formState.grams > 0 && (
+                            <div className="food-log-preview">
+                                <span className="food-log-preview-kcal">{totals.calories} kcal</span>
+                                <div className="macro-chips">
+                                    <span className="macro-chip macro-chip--protein">{totals.protein}g P</span>
+                                    <span className="macro-chip macro-chip--carbs">{totals.carbs}g C</span>
+                                    <span className="macro-chip macro-chip--fats">{totals.fats}g F</span>
+                                </div>
                             </div>
-                        </div>
-                    )}
-                    <button type="submit">
-                        <Plus size={15} strokeWidth={3} />
-                        Add meal
-                    </button>
-                </div>
-            </form>
+                        )}
+                        <button type="submit">
+                            <Plus size={15} strokeWidth={3} />
+                            Add meal
+                        </button>
+                    </div>
+                </form>}
 
             {loggedMeals.length > 0 ? (
                 <>
