@@ -46,12 +46,14 @@ export default function FoodSearch(props: FoodSearchProps) {
 
     const [query, setQuery] = React.useState('');
     const [runSearch, { loading, error, data }] = useLazyQuery(SEARCH_FOODS)
+    const [showResults, setShowResults] = React.useState(false);
 
     function handleSearch(e: React.SubmitEvent<HTMLFormElement>) {
         e.preventDefault();
 
         if (query.trim()) {
             runSearch({ variables: { text: query.trim() } });
+            setShowResults(true);
         }
     }
 
@@ -64,15 +66,15 @@ export default function FoodSearch(props: FoodSearchProps) {
 
             {loading && <p>Loading...</p>}
             {error && <p>Error occurred while searching for foods.</p>}
-            {data?.searchFoods && (
+            {showResults && data?.searchFoods && (
                 <ul>
                     {data.searchFoods.map(food => (
-                        <li key={food.id}><button type="button" onClick={() => props.onSelectFood(food)}>{food.name} - {food.calories} kcal - Protein: {food.protein}g - Carbs: {food.carbs}g - Fats: {food.fats}g</button></li>
+                        <li key={food.id}><button type="button" onClick={() => { props.onSelectFood(food); setShowResults(false) }}>{food.name} - {food.calories} kcal - Protein: {food.protein}g - Carbs: {food.carbs}g - Fats: {food.fats}g</button></li>
                     ))}
                 </ul>
             )
             }
-            {data?.searchFoods?.length === 0 && <p>No foods found.</p>}
+            {showResults && data?.searchFoods?.length === 0 && <p>No foods found.</p>}
         </div >
     )
 }
