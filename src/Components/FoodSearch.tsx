@@ -1,4 +1,5 @@
 import React from 'react';
+import { Search } from 'lucide-react';
 import { gql } from '@apollo/client';
 import { useLazyQuery } from '@apollo/client/react'
 import type { TypedDocumentNode } from '@apollo/client';
@@ -58,23 +59,41 @@ export default function FoodSearch(props: FoodSearchProps) {
     }
 
     return (
-        <div>
-            <form onSubmit={handleSearch}>
-                <input value={query} placeholder="Search foods" onChange={e => setQuery(e.target.value)} />
-                <button type="submit">Search</button>
+        <div className="food-search">
+            <form className="food-search-form" onSubmit={handleSearch}>
+                <input type="text" value={query} placeholder="Search foods, e.g. banana" aria-label="Search foods" onChange={e => setQuery(e.target.value)} />
+                <button type="submit" className="btn-link">
+                    <Search size={13} strokeWidth={2.5} />
+                    Search
+                </button>
             </form>
 
-            {loading && <p>Loading...</p>}
-            {error && <p>Error occurred while searching for foods.</p>}
-            {showResults && data?.searchFoods && (
-                <ul>
+            {loading && <p className="food-search-status">Searching…</p>}
+            {error && <p className="food-search-status food-search-status--error">Couldn't search foods. Please try again.</p>}
+            {showResults && data?.searchFoods && data.searchFoods.length > 0 && (
+                <ul className="food-search-results">
                     {data.searchFoods.map(food => (
-                        <li key={food.id}><button type="button" onClick={() => { props.onSelectFood(food); setShowResults(false) }}>{food.name} - {food.calories} kcal - Protein: {food.protein}g - Carbs: {food.carbs}g - Fats: {food.fats}g</button></li>
+                        <li key={food.id}>
+                            <button
+                                type="button"
+                                className="food-search-result"
+                                onClick={() => { props.onSelectFood(food); setShowResults(false) }}
+                            >
+                                <span className="food-search-result-main">
+                                    <span className="food-name">{food.name}</span>
+                                    <span className="food-calories">{food.calories} kcal / 100g</span>
+                                </span>
+                                <span className="macro-chips">
+                                    <span className="macro-chip macro-chip--protein">{food.protein}g P</span>
+                                    <span className="macro-chip macro-chip--carbs">{food.carbs}g C</span>
+                                    <span className="macro-chip macro-chip--fats">{food.fats}g F</span>
+                                </span>
+                            </button>
+                        </li>
                     ))}
                 </ul>
-            )
-            }
-            {showResults && data?.searchFoods?.length === 0 && <p>No foods found.</p>}
-        </div >
+            )}
+            {showResults && data?.searchFoods?.length === 0 && <p className="food-search-status">No foods found.</p>}
+        </div>
     )
 }
