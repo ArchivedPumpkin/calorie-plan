@@ -4,9 +4,6 @@ import React from "react";
 import FoodSearch, { type Food } from "./FoodSearch";
 
 type FoodLogProps = {
-    caloricDeficit: number;
-    setCaloricDeficit: React.Dispatch<React.SetStateAction<number>>;
-
     foodLog: {
         meal: string;
         grams: number;
@@ -130,7 +127,6 @@ export default function FoodLog(props: FoodLogProps) {
         e.preventDefault();
 
         props.setFoodLog(prev => [...prev, { meal: formState.meal, grams: formState.grams, ...totals }])
-        props.setCaloricDeficit(prev => prev - totals.calories)
         setFormState({
             meal: "",
             grams: 0,
@@ -144,7 +140,6 @@ export default function FoodLog(props: FoodLogProps) {
 
     function removeFoodLogEntry(index: number) {
         props.setFoodLog(prev => prev.filter((_, i) => i !== index))
-        props.setCaloricDeficit(prev => prev + props.foodLog[index].calories)
     }
 
     const loggedMeals = props.foodLog.filter(entry => entry.meal !== "")

@@ -98,8 +98,6 @@ function App() {
             <FoodLog
               foodLog={foodLog}
               setFoodLog={setFoodLog}
-              caloricDeficit={caloricDeficit}
-              setCaloricDeficit={setCaloricDeficit}
             />
           </section>
         </main>
