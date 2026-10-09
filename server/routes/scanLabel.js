@@ -5,7 +5,6 @@ const router = express.Router();
 
 router.post("/scan-label", async (req, res) => {
   console.log("Received a request to scan a label");
-  console.log("Request body:", req.body);
 
   try {
     const base64Data = req.body.file.split(",")[1];

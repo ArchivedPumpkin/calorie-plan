@@ -27,7 +27,7 @@ export async function scanLabel(base64Data) {
         type: "text",
         text: "Set found to true if the label is successfully extracted. Otherwise, set it to false.",
       },
-      { type: "image", data: base64Data, mime_type: "image/png" },
+      { type: "image", data: base64Data, mime_type: "image/jpeg" },
     ],
     response_format: {
       type: "text",
