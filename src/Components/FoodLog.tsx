@@ -212,13 +212,13 @@ export default function FoodLog(props: FoodLogProps) {
                 <div className="card-title">
                     <UtensilsCrossed size={16} strokeWidth={2.25} />
                     <h2>Food Log</h2>
-                </div>
-                <div className="card-header-actions">
-                    {scanError && (
-                        <span className="card-header-meta" style={{ color: "var(--protein)" }}>
-                            Failed to scan the label. Please try again.
+                    {loggedMeals.length > 0 && (
+                        <span className="card-header-meta">
+                            {loggedMeals.length} {loggedMeals.length === 1 ? "meal" : "meals"}
                         </span>
                     )}
+                </div>
+                <div className="card-header-actions">
                     <button
                         type="button"
                         className="btn-link food-log-manual-toggle"
@@ -233,13 +233,14 @@ export default function FoodLog(props: FoodLogProps) {
                         setFile={setFile}
                         isScanning={isScanning}
                     />
-                    {loggedMeals.length > 0 && (
-                        <span className="card-header-meta">
-                            {loggedMeals.length} {loggedMeals.length === 1 ? "meal" : "meals"}
-                        </span>
-                    )}
                 </div>
             </div>
+
+            {scanError && (
+                <p className="food-log-scan-error" role="alert">
+                    Failed to scan the label. Please try again.
+                </p>
+            )}
 
             <FoodSearch
                 onSelectFood={handleSelectedFood}

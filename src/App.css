@@ -38,13 +38,14 @@
 .app-layout {
   flex: 1;
   display: grid;
-  grid-template-columns: 340px 1fr;
+  grid-template-columns: 340px minmax(0, 1fr);
   gap: 20px;
   align-items: start;
+  align-content: start;
   padding-bottom: 64px;
 
   @media (max-width: 900px) {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 
@@ -65,6 +66,11 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
+}
+
+.app-rail,
+.app-main {
+  min-width: 0;
 }
 
 /* Every panel is a raised charcoal surface. */
@@ -597,30 +603,29 @@
   margin-bottom: 14px;
 }
 
+/* Full-width field with the search button sitting inside it on the right. */
 .food-search-form {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+  position: relative;
 
   input[type="text"] {
-    flex: 1;
-    min-width: 0;
+    width: 100%;
+    min-height: 50px;
+    padding-right: 56px;
+    text-overflow: ellipsis;
   }
 
-  button[type="submit"].btn-link {
-    flex-shrink: 0;
-    padding: 12px 16px;
-    font: 600 11px/1 var(--sans);
-    color: var(--text);
-    background: transparent;
-    border: 1px solid var(--line-strong);
-    box-shadow: none;
-    filter: none;
+  .food-search-submit {
+    position: absolute;
+    top: 50%;
+    right: 5px;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border-radius: calc(var(--radius-sm) - 4px);
 
-    &:hover {
-      color: var(--accent);
-      border-color: var(--accent-line);
-      background: var(--accent-soft);
+    &:active {
+      transform: translateY(-50%) scale(0.94);
     }
   }
 }
@@ -713,6 +718,12 @@
 .food-log .card-header {
   flex-wrap: wrap;
   row-gap: 12px;
+}
+
+.food-log-scan-error {
+  font-size: 13px;
+  color: var(--protein);
+  margin: -6px 0 14px;
 }
 
 .food-log-manual-toggle {
@@ -841,10 +852,21 @@
 
   .btn-link,
   .food-log-manual-toggle,
-  .scan-label-icon,
-  .food-search-form button[type="submit"].btn-link {
+  .scan-label-icon {
     min-height: 44px;
     height: auto;
+  }
+
+  .food-search-form {
+    input[type="text"] {
+      min-height: 54px;
+      padding-right: 60px;
+    }
+
+    .food-search-submit {
+      width: 44px;
+      height: 44px;
+    }
   }
 
   .food-log-remove {
@@ -854,5 +876,87 @@
 
   .food-search-result {
     padding: 13px 14px;
+  }
+}
+
+/* Phones: the food log actions get their own full-width row. */
+@media (max-width: 720px) {
+  .food-log .card-header-actions {
+    width: 100%;
+  }
+
+  .food-log .card-header-actions > * {
+    flex: 1 1 0;
+    justify-content: center;
+  }
+}
+
+/* Very small phones (≤360px). */
+@media (max-width: 360px) {
+  .daily-goals-body {
+    grid-template-columns: 88px 1fr;
+    gap: 14px;
+  }
+
+  .calorie-ring {
+    width: 88px;
+  }
+
+  .calorie-ring-figure {
+    font-size: 22px;
+  }
+
+  .calorie-ring-unit {
+    display: none;
+  }
+
+  .food-log .card-header-actions .btn-link {
+    padding-inline: 10px;
+  }
+}
+
+/* Tablets: summary cards side by side, compact goals ring. */
+@media (min-width: 601px) and (max-width: 900px) {
+  .app-rail {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+  }
+
+  .daily-goals-body {
+    display: grid;
+    grid-template-columns: 120px minmax(0, 1fr);
+    align-items: center;
+    gap: 18px;
+  }
+
+  .calorie-ring {
+    width: 120px;
+    margin: 0;
+  }
+
+  .calorie-ring-figure {
+    font-size: 30px;
+  }
+
+  .calorie-ring-unit {
+    font-size: 9px;
+  }
+
+  .stats-bars {
+    gap: 10px;
+  }
+}
+
+/* Very small phones: tighter buttons, no row icon. */
+@media (max-width: 360px) {
+  .food-log .card-header-actions .btn-link {
+    gap: 5px;
+    padding-inline: 8px;
+    letter-spacing: 0.06em;
+  }
+
+  .food-log-item .food-log-icon {
+    display: none;
   }
 }

@@ -66,12 +66,12 @@ export default function FoodSearch(props: FoodSearchProps) {
                     value={query}
                     placeholder="Search foods, e.g. banana"
                     aria-label="Search foods"
+                    enterKeyHint="search"
                     onChange={e => setQuery(e.target.value)}
                     onKeyDown={e => { if (e.key === "Escape") setShowResults(false) }}
                 />
-                <button type="submit" className="btn-link">
-                    <Search size={13} strokeWidth={2.5} />
-                    Search
+                <button type="submit" className="food-search-submit" aria-label="Search">
+                    <Search size={18} strokeWidth={2.5} />
                 </button>
             </form>
 
