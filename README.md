@@ -1,8 +1,10 @@
 # Calorie Plan
 
+> **Work in progress.** This is a project I'm actively building. Core features work, but expect rough edges, and things may change. Accounts and saved data are being built now. See [Limitations and roadmap](#limitations-and-roadmap).
+
 A daily calorie and macro tracker. Set a calorie target, pick a macro split, and log what you eat by searching a food database, scanning a nutrition label with your phone camera, or typing it in.
 
-**Live app:** [calorie-plan.vercel.app](https://calorie-plan.vercel.app/)
+**Live app (preview):** [calorie-plan.vercel.app](https://calorie-plan.vercel.app/)
 
 ---
 
@@ -165,7 +167,7 @@ The app is deployed on Vercel from this repository, and every push to `main` red
 
 ## Limitations and roadmap
 
-- **No saved data yet.** Everything lives in React state and resets on refresh. Next up is a database, with saving custom foods as a GraphQL mutation so they appear in search alongside USDA results.
+- **No saved data yet.** Everything lives in React state and resets on refresh. Accounts are in progress: email and password login with [Better Auth](https://www.better-auth.com) and [MongoDB](https://www.mongodb.com/atlas), with each user's targets and food log saved through GraphQL mutations. After that, saving custom foods so they appear in search alongside USDA results.
 - **Grams only.** Liquids measured in ml or dl aren't supported yet.
 - **Free-tier API limits.** Gemini's free tier has a small daily quota, so scanning can be rate-limited.
 - **AI extraction can be wrong.** Always check scanned values before adding the meal.
