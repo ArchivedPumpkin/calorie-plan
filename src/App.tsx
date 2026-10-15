@@ -11,6 +11,9 @@ import Macros from "./Components/Macros";
 import DisplayStats from "./Components/DisplayStats";
 import FoodLog from "./Components/FoodLog";
 import "./App.css";
+import AuthForm from "./Components/AuthForm";
+import { authClient } from "./lib/auth-client";
+
 
 type Macros = {
   protein: number;
@@ -28,6 +31,7 @@ type FoodLogEntry = {
 };
 
 function App() {
+  const { data: session, isPending } = authClient.useSession();
   const [caloricDeficit, setCaloricDeficit] = React.useState<number>(0);
   const [macros, setMacros] = React.useState<Macros>({
     protein: 0,
@@ -45,8 +49,22 @@ function App() {
     }
   ])
 
+  async function handleSignOut() {
+    await authClient.signOut();
+    setCaloricDeficit(0);
+    setMacros({ protein: 0, carbs: 0, fats: 0 });
+    setFoodLog([]);
+  }
+
 
   console.log(foodLog)
+
+  if (isPending) {
+    return <p>Loading...</p>;
+  }
+  if (!session) {
+    return <AuthForm />;
+  }
 
   return (
     <div className="app-shell">
@@ -59,6 +77,12 @@ function App() {
         <p className="app-subtitle">
           Set your deficit, pick your macro split, and log your meals.
         </p>
+        <button
+          type="button"
+          onClick={handleSignOut}
+        >
+          Sign Out
+        </button>
       </header>
 
       <div className="app-layout">

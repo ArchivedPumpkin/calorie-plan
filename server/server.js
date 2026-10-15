@@ -1,4 +1,6 @@
 import "dotenv/config";
+import { toNodeHandler } from "better-auth/node";
+import { auth } from "./auth/auth.js";
 import express from "express";
 import cors from "cors";
 import { ApolloServer } from "@apollo/server";
@@ -8,6 +10,7 @@ import { resolvers } from "./graphql/resolvers.js";
 import scanLabelRouter from "./routes/scanLabel.js";
 
 const app = express();
+app.all("/api/auth/*splat", toNodeHandler(auth));
 app.use(express.json({ limit: "10mb" }));
 app.use(cors());
 
