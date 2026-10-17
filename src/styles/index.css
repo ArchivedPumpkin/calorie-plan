@@ -1,0 +1,15 @@
+/* App styles, in load order. base.css (tokens, element defaults, buttons) is
+   imported first from main.tsx. Order matters: later files override earlier
+   ones, e.g. auth.css overrides card.css's padding and the component files
+   override ui.css's phone tap-target sizes. Keep new files below card.css
+   and ui.css. */
+@import "./layout.css";
+@import "./card.css";
+@import "./ui.css";
+@import "./caloric-deficit.css";
+@import "./macros.css";
+@import "./daily-goals.css";
+@import "./food-log.css";
+@import "./food-search.css";
+@import "./scan-label.css";
+@import "./auth.css";

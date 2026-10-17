@@ -1,0 +1,222 @@
+/* ==========================================================================
+   Food log — header actions, meal form with live preview, logged entries.
+   ========================================================================== */
+.food-log .card-header {
+  flex-wrap: wrap;
+  row-gap: 12px;
+}
+
+.food-log-manual-toggle {
+  height: 32px;
+  white-space: nowrap;
+}
+
+.food-log-scan-error {
+  font-size: 13px;
+  color: var(--protein);
+  margin: -6px 0 14px;
+}
+
+.food-log-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(104px, 1fr));
+  gap: 14px;
+  align-items: end;
+  padding: 18px;
+  margin-bottom: 22px;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+
+  .form-row {
+    margin-bottom: 0;
+  }
+
+  .form-row--wide {
+    grid-column: 1 / -1;
+  }
+
+  button[type="submit"] {
+    margin-left: auto;
+
+    @media (max-width: 480px) {
+      width: 100%;
+    }
+  }
+}
+
+.food-log-form-footer {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-top: 2px;
+}
+
+.food-log-preview {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.food-log-preview-kcal {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 1;
+  color: var(--text-hi);
+  font-variant-numeric: tabular-nums;
+}
+
+.food-log-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.food-log-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 13px 16px;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  transition: border-color 0.15s, background 0.15s;
+
+  &:hover {
+    border-color: var(--line-strong);
+    background: var(--surface-hi);
+  }
+
+  .food-log-icon {
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    color: var(--accent);
+    background: var(--accent-soft);
+  }
+
+  .food-log-main {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+    flex: 1;
+  }
+
+  .food-name {
+    font-weight: 500;
+    color: var(--text-hi);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .food-calories {
+    font-size: 13px;
+    color: var(--text-mute);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  @media (max-width: 560px) {
+    flex-wrap: wrap;
+
+    .food-log-icon {
+      order: 1;
+    }
+
+    .food-log-main {
+      flex: 1;
+      order: 2;
+    }
+
+    .macro-chips {
+      order: 4;
+      flex: 1 1 100%;
+    }
+
+    .food-log-remove {
+      order: 3;
+    }
+  }
+}
+
+.food-log-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  color: var(--text-mute);
+  text-align: center;
+  padding: 44px 20px;
+  border: 1px dashed var(--line-strong);
+  border-radius: var(--radius-sm);
+}
+
+.food-log-empty .lucide {
+  color: var(--line-strong);
+}
+
+.food-log-total {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+  font: var(--label);
+  letter-spacing: var(--label-tracking);
+  text-transform: uppercase;
+  color: var(--text-mute);
+
+  span:last-child {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 30px;
+    line-height: 1;
+    letter-spacing: 0.01em;
+    color: var(--accent);
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* Phones: header actions get their own full-width row, 44px tap targets. */
+@media (max-width: 720px) {
+  .food-log-manual-toggle {
+    min-height: 44px;
+    height: auto;
+  }
+
+  .food-log .card-header-actions {
+    width: 100%;
+  }
+
+  .food-log .card-header-actions > * {
+    flex: 1 1 0;
+    justify-content: center;
+  }
+}
+
+/* Very small phones: tighter header buttons, no row icon. */
+@media (max-width: 360px) {
+  .food-log .card-header-actions .btn-link {
+    gap: 5px;
+    padding-inline: 8px;
+    letter-spacing: 0.06em;
+  }
+
+  .food-log-item .food-log-icon {
+    display: none;
+  }
+}

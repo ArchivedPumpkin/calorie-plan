@@ -1,0 +1,137 @@
+/* ==========================================================================
+   Food search — USDA lookup that fills the meal form.
+   ========================================================================== */
+.food-search {
+  margin-bottom: 14px;
+}
+
+/* Full-width field with the search button sitting inside it on the right. */
+.food-search-form {
+  position: relative;
+
+  input[type="text"] {
+    width: 100%;
+    min-height: 50px;
+    padding-right: 56px;
+    text-overflow: ellipsis;
+  }
+
+  .food-search-submit {
+    position: absolute;
+    top: 50%;
+    right: 5px;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border-radius: calc(var(--radius-sm) - 4px);
+
+    &:active {
+      transform: translateY(-50%) scale(0.94);
+    }
+  }
+}
+
+.food-search-status {
+  font-size: 13px;
+  color: var(--text-mute);
+  margin-top: 10px;
+}
+
+.food-search-status--error {
+  color: var(--protein);
+}
+
+.food-search-results-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 10px;
+  font: var(--label);
+  letter-spacing: var(--label-tracking);
+  text-transform: uppercase;
+  color: var(--text-mute);
+}
+
+.food-search-results {
+  list-style: none;
+  margin: 6px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.food-search-result {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  text-align: left;
+  font: inherit;
+  padding: 11px 14px;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  transition: border-color 0.15s, background 0.15s;
+
+  &:hover {
+    border-color: var(--accent-line);
+    background: var(--accent-soft);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  .food-search-result-main {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+    flex: 1;
+  }
+
+  .food-name {
+    font-weight: 500;
+    color: var(--text-hi);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .food-calories {
+    font-size: 13px;
+    color: var(--text-mute);
+    font-variant-numeric: tabular-nums;
+  }
+
+  @media (max-width: 560px) {
+    flex-wrap: wrap;
+
+    .macro-chips {
+      flex: 1 1 100%;
+    }
+  }
+}
+
+/* Phones: taller field and 44px search button. */
+@media (max-width: 720px) {
+  .food-search-form {
+    input[type="text"] {
+      min-height: 54px;
+      padding-right: 60px;
+    }
+
+    .food-search-submit {
+      width: 44px;
+      height: 44px;
+    }
+  }
+
+  .food-search-result {
+    padding: 13px 14px;
+  }
+}

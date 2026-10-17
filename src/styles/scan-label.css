@@ -1,0 +1,36 @@
+/* ==========================================================================
+   Scan label — button that opens the camera / file picker.
+   ========================================================================== */
+.scan-label-icon {
+  position: relative;
+  height: 32px;
+  margin: 0;
+  flex-shrink: 0;
+  white-space: nowrap;
+  cursor: pointer;
+
+  &:focus-within {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  /* Hidden but still reachable by keyboard and screen readers. */
+  input[type="file"] {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+}
+
+@media (max-width: 720px) {
+  .scan-label-icon {
+    min-height: 44px;
+    height: auto;
+  }
+}
