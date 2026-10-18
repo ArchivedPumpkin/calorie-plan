@@ -1,0 +1,144 @@
+/* ==========================================================================
+   Layout — page shell, masthead with account bar, summary rail + main column.
+   ========================================================================== */
+.app-shell {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.app-header {
+  padding: 64px 0 36px;
+}
+
+.app-header-bar {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.app-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font: var(--label);
+  letter-spacing: var(--label-tracking);
+  text-transform: uppercase;
+  color: var(--accent);
+  background: var(--accent-soft);
+  border: 1px solid var(--accent-line);
+  border-radius: 999px;
+  padding: 6px 13px 6px 10px;
+  margin-bottom: 20px;
+}
+
+.app-subtitle {
+  max-width: 52ch;
+  color: var(--text);
+}
+
+.app-account {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-left: auto;
+}
+
+.app-account-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+  max-width: 16ch;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.app-loading {
+  min-height: 60svh;
+  display: grid;
+  place-items: center;
+  font: var(--label);
+  letter-spacing: var(--label-tracking);
+  text-transform: uppercase;
+  color: var(--text-mute);
+}
+
+.app-layout {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 340px minmax(0, 1fr);
+  gap: 20px;
+  align-items: start;
+  align-content: start;
+  padding-bottom: 64px;
+
+  @media (max-width: 900px) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.app-rail {
+  position: sticky;
+  top: 24px;
+  align-self: start;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  @media (max-width: 900px) {
+    position: static;
+  }
+}
+
+.app-main {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.app-rail,
+.app-main {
+  min-width: 0;
+}
+
+/* Phones: compact masthead so the food log is reachable without scrolling. */
+@media (max-width: 720px) {
+  .app-header {
+    padding: 20px 0 16px;
+  }
+
+  .app-header-bar {
+    margin-bottom: 12px;
+  }
+
+  .app-eyebrow,
+  .app-subtitle {
+    display: none;
+  }
+
+  .app-header h1 {
+    font-size: 34px;
+    margin: 0;
+  }
+
+  .app-account-name {
+    max-width: 12ch;
+  }
+
+  .app-layout,
+  .app-rail,
+  .app-main {
+    gap: 12px;
+  }
+}
+
+/* Tablets: summary cards side by side. */
+@media (min-width: 601px) and (max-width: 900px) {
+  .app-rail {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+  }
+}

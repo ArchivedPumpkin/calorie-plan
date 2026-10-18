@@ -1,0 +1,86 @@
+/* ==========================================================================
+   Shared UI — pieces used by more than one component.
+   ========================================================================== */
+
+/* Protein / carbs / fat chips: food log entries, search results, preview. */
+.macro-chips {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.macro-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1;
+  padding: 6px 10px;
+  border-radius: 999px;
+  white-space: nowrap;
+  color: var(--chip-ink);
+  background: color-mix(in srgb, var(--chip-ink) 12%, transparent);
+  font-variant-numeric: tabular-nums;
+}
+
+.macro-chip--protein {
+  --chip-ink: var(--protein);
+}
+.macro-chip--carbs {
+  --chip-ink: var(--carbs);
+}
+.macro-chip--fats {
+  --chip-ink: var(--fats);
+}
+
+/* Round × button: removing a log entry, closing search results. */
+.food-log-remove {
+  display: grid;
+  place-items: center;
+  background: none;
+  border: none;
+  color: var(--text-mute);
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  transition: color 0.15s, background 0.15s;
+
+  &:hover {
+    color: var(--protein);
+    background: color-mix(in srgb, var(--protein) 14%, transparent);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+}
+
+/* Loading spinner (scan button). */
+.spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Phones: 44px tap targets. */
+@media (max-width: 720px) {
+  .btn-link {
+    min-height: 44px;
+    height: auto;
+  }
+
+  .food-log-remove {
+    width: 44px;
+    height: 44px;
+  }
+}

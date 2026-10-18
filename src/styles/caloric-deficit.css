@@ -1,0 +1,33 @@
+/* ==========================================================================
+   Caloric deficit — the daily calorie target figure.
+   ========================================================================== */
+
+/* The target figure: condensed, tabular, accent-coloured. */
+.summary-value {
+  display: flex;
+  flex-direction: column;
+
+  strong {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 52px;
+    line-height: 0.88;
+    letter-spacing: 0.01em;
+    color: var(--text-hi);
+    font-variant-numeric: tabular-nums;
+  }
+
+  span {
+    font: var(--label);
+    letter-spacing: var(--label-tracking);
+    text-transform: uppercase;
+    color: var(--text-mute);
+    margin-top: 8px;
+  }
+}
+
+@media (max-width: 720px) {
+  .summary-value strong {
+    font-size: 38px;
+  }
+}

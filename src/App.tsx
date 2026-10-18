@@ -5,12 +5,15 @@
 // 1. Set caloric deficit and macros (Component: CaloricDeficit)
 // 2. Log food intake (Component: FoodLog)
 import React from "react";
-import { Zap } from "lucide-react";
+import { Zap, LogOut } from "lucide-react";
 import CaloricDeficit from "./Components/CaloricDeficit";
 import Macros from "./Components/Macros";
 import DisplayStats from "./Components/DisplayStats";
 import FoodLog from "./Components/FoodLog";
-import "./App.css";
+import "./styles/index.css";
+import AuthForm from "./Components/AuthForm";
+import { authClient } from "./lib/auth-client";
+
 
 type Macros = {
   protein: number;
@@ -28,6 +31,7 @@ type FoodLogEntry = {
 };
 
 function App() {
+  const { data: session, isPending } = authClient.useSession();
   const [caloricDeficit, setCaloricDeficit] = React.useState<number>(0);
   const [macros, setMacros] = React.useState<Macros>({
     protein: 0,
@@ -45,16 +49,37 @@ function App() {
     }
   ])
 
+  async function handleSignOut() {
+    await authClient.signOut();
+    setCaloricDeficit(0);
+    setMacros({ protein: 0, carbs: 0, fats: 0 });
+    setFoodLog([]);
+  }
 
-  console.log(foodLog)
+
+  if (isPending) {
+    return <p className="app-loading">Loading…</p>;
+  }
+  if (!session) {
+    return <AuthForm />;
+  }
 
   return (
     <div className="app-shell">
       <header className="app-header">
-        <p className="app-eyebrow">
-          <Zap size={13} strokeWidth={2.5} fill="currentColor" />
-          Daily tracker
-        </p>
+        <div className="app-header-bar">
+          <p className="app-eyebrow">
+            <Zap size={13} strokeWidth={2.5} fill="currentColor" />
+            Daily tracker
+          </p>
+          <div className="app-account">
+            <span className="app-account-name">{session.user.name}</span>
+            <button type="button" className="btn-link" onClick={handleSignOut}>
+              <LogOut size={13} strokeWidth={2.5} />
+              Sign out
+            </button>
+          </div>
+        </div>
         <h1>Calorie Plan</h1>
         <p className="app-subtitle">
           Set your deficit, pick your macro split, and log your meals.
