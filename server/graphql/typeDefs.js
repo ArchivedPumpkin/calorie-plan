@@ -11,6 +11,13 @@ export const typeDefs = `
   type Query {
     hello: String!
     searchFoods(query: String!, limit: Int = 10): [Food!]!
+    me: User
+  }
+
+  type User {
+    id: ID!
+    name: String!
+    email: String!
   }
 
 `;
