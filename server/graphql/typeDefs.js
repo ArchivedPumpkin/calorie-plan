@@ -8,10 +8,37 @@ export const typeDefs = `
     fats: Float!
   }
 
+  type FoodEntry {
+    id: ID!
+    date: String!
+    meal: String!
+    grams: Float!
+    calories: Float!
+    protein: Float!
+    carbs: Float!
+    fats: Float!
+  }
+
+  type FoodEntryInput {
+    date: String!
+    meal: String!
+    grams: Float!
+    calories: Float!
+    protein: Float!
+    carbs: Float!
+    fats: Float!
+  }
+
   type Query {
     hello: String!
     searchFoods(query: String!, limit: Int = 10): [Food!]!
     me: User
+    foodEntries(date: String!): [FoodEntry!]!
+  }
+
+  type Mutation {
+    addFoodEntry(input: FoodEntryInput!): FoodEntry!
+    deleteFoodEntry(id: ID!): Boolean!
   }
 
   type User {
