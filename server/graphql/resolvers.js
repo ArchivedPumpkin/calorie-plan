@@ -16,3 +16,14 @@ export const resolvers = {
     },
   },
 };
+
+function requireUser(context) {
+  if (!context.user) {
+    throw new GraphQLError("You must be logged in", {
+      extensions: {
+        code: "UNAUTHENTICATED",
+      },
+    });
+  }
+  return context.user;
+}

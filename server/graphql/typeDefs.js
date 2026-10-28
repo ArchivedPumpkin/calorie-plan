@@ -19,7 +19,7 @@ export const typeDefs = `
     fats: Float!
   }
 
-  type FoodEntryInput {
+  input FoodEntryInput {
     date: String!
     meal: String!
     grams: Float!
