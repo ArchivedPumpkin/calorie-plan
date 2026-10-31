@@ -30,7 +30,6 @@ export const typeDefs = `
   }
 
   type Query {
-    hello: String!
     searchFoods(query: String!, limit: Int = 10): [Food!]!
     me: User
     foodEntries(date: String!): [FoodEntry!]!
