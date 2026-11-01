@@ -1,5 +1,5 @@
 import "dotenv/config";
-import { toNodeHandler } from "better-auth/node";
+import { toNodeHandler, fromNodeHeaders } from "better-auth/node";
 import { auth } from "./auth/auth.js";
 import express from "express";
 import cors from "cors";
@@ -17,7 +17,18 @@ app.use(cors());
 const apollo = new ApolloServer({ typeDefs, resolvers });
 await apollo.start();
 
-app.use("/graphql", expressMiddleware(apollo));
+app.use(
+  "/graphql",
+  expressMiddleware(apollo, {
+    context: async ({ req }) => {
+      const session = await auth.api.getSession({
+        headers: fromNodeHeaders(req.headers),
+      });
+      return { user: session?.user ?? null };
+    },
+  }),
+);
+
 app.use("/api", scanLabelRouter);
 
 const PORT = process.env.PORT || 8000;
