@@ -13,18 +13,11 @@ import FoodLog from "./Components/FoodLog";
 import "./styles/index.css";
 import AuthForm from "./Components/AuthForm";
 import { authClient } from "./lib/auth-client";
+import { useQuery, useApolloClient } from "@apollo/client/react";
+import { FOOD_ENTRIES, today } from "./graphql/foodLog";
 
 
 type Macros = {
-  protein: number;
-  carbs: number;
-  fats: number;
-};
-
-type FoodLogEntry = {
-  meal: string;
-  grams: number;
-  calories: number;
   protein: number;
   carbs: number;
   fats: number;
@@ -38,22 +31,15 @@ function App() {
     carbs: 0,
     fats: 0,
   });
-  const [foodLog, setFoodLog] = React.useState<FoodLogEntry[]>([
-    {
-      meal: "",
-      grams: 0,
-      calories: 0,
-      protein: 0,
-      carbs: 0,
-      fats: 0,
-    }
-  ])
+  const { data } = useQuery(FOOD_ENTRIES, { variables: { date: today() } });
+  const foodLog = data?.foodEntries ?? [];
+  const client = useApolloClient();
 
   async function handleSignOut() {
     await authClient.signOut();
     setCaloricDeficit(0);
     setMacros({ protein: 0, carbs: 0, fats: 0 });
-    setFoodLog([]);
+    await client.clearStore();
   }
 
 
@@ -120,10 +106,7 @@ function App() {
 
         <main className="app-main">
           <section className="card">
-            <FoodLog
-              foodLog={foodLog}
-              setFoodLog={setFoodLog}
-            />
+            <FoodLog foodLog={foodLog} />
           </section>
         </main>
       </div>

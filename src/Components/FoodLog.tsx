@@ -2,24 +2,11 @@ import { UtensilsCrossed, Salad, Plus, X, Pencil } from "lucide-react";
 import ScanLabel from "./ScanLabel";
 import React from "react";
 import FoodSearch, { type Food } from "./FoodSearch";
+import { useMutation } from "@apollo/client/react";
+import { ADD_FOOD_ENTRY, DELETE_FOOD_ENTRY, FOOD_ENTRIES, today, type FoodEntry } from "../graphql/foodLog";
 
 type FoodLogProps = {
-    foodLog: {
-        meal: string;
-        grams: number;
-        calories: number;
-        protein: number;
-        carbs: number;
-        fats: number;
-    }[];
-    setFoodLog: React.Dispatch<React.SetStateAction<{
-        meal: string;
-        grams: number;
-        calories: number;
-        protein: number;
-        carbs: number;
-        fats: number;
-    }[]>>;
+    foodLog: FoodEntry[];
 };
 
 type ScannedLabel = {
@@ -52,6 +39,8 @@ export default function FoodLog(props: FoodLogProps) {
         carbs: 0,
         fats: 0,
     })
+    const [addEntry] = useMutation(ADD_FOOD_ENTRY, { refetchQueries: [FOOD_ENTRIES] })
+    const [deleteEntry] = useMutation(DELETE_FOOD_ENTRY, { refetchQueries: [FOOD_ENTRIES] })
 
     function resizeImage(file: File, maxSize = 1200): Promise<string> {
         return new Promise((resolve, reject) => {
@@ -123,10 +112,14 @@ export default function FoodLog(props: FoodLogProps) {
 
     console.log("Scanned label:", scannedLabel)
 
-    function submitFoodLog(e: React.SubmitEvent<HTMLFormElement>) {
+    async function submitFoodLog(e: React.SubmitEvent<HTMLFormElement>) {
         e.preventDefault();
 
-        props.setFoodLog(prev => [...prev, { meal: formState.meal, grams: formState.grams, ...totals }])
+        await addEntry({
+            variables: {
+                input: { date: today(), meal: formState.meal, grams: formState.grams, ...totals },
+            },
+        })
         setFormState({
             meal: "",
             grams: 0,
@@ -138,16 +131,14 @@ export default function FoodLog(props: FoodLogProps) {
         setShowForm(false)
     }
 
-    function removeFoodLogEntry(index: number) {
-        props.setFoodLog(prev => prev.filter((_, i) => i !== index))
+    function removeFoodLogEntry(id: string) {
+        deleteEntry({ variables: { id } })
     }
 
-    const loggedMeals = props.foodLog.filter(entry => entry.meal !== "")
+    const loggedMeals = props.foodLog
 
-    const foodLogEntries = props.foodLog.map((entry, index) => [entry, index] as const)
-        .filter(([entry]) => entry.meal !== "")
-        .map(([entry, index]) => (
-            <li className="food-log-item" key={index}>
+    const foodLogEntries = loggedMeals.map((entry) => (
+            <li className="food-log-item" key={entry.id}>
                 <span className="food-log-icon">
                     <Salad size={17} strokeWidth={2.25} />
                 </span>
@@ -164,7 +155,7 @@ export default function FoodLog(props: FoodLogProps) {
                     type="button"
                     className="food-log-remove"
                     aria-label={`Remove ${entry.meal}`}
-                    onClick={() => removeFoodLogEntry(index)}
+                    onClick={() => removeFoodLogEntry(entry.id)}
                 >
                     <X size={16} strokeWidth={2.5} />
                 </button>
