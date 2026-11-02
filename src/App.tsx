@@ -10,6 +10,7 @@ import CaloricDeficit from "./Components/CaloricDeficit";
 import Macros from "./Components/Macros";
 import DisplayStats from "./Components/DisplayStats";
 import FoodLog from "./Components/FoodLog";
+import TdeeCalculator from "./Components/TdeeCalculator";
 import "./styles/index.css";
 import AuthForm from "./Components/AuthForm";
 import { authClient } from "./lib/auth-client";
@@ -50,6 +51,12 @@ function App() {
     return <AuthForm />;
   }
 
+  // A new target means the old macro grams no longer fit, so the split is picked again.
+  function handleSelectGoal(calories: number) {
+    setCaloricDeficit(calories);
+    setMacros({ protein: 0, carbs: 0, fats: 0 });
+  }
+
   return (
     <div className="app-shell">
       <header className="app-header">
@@ -72,6 +79,11 @@ function App() {
         </p>
       </header>
 
+      {caloricDeficit === 0 ? (
+        <main className="app-onboarding">
+          <TdeeCalculator onSelectGoal={handleSelectGoal} />
+        </main>
+      ) : (
       <div className="app-layout">
         {/* Summary rail: stays in view while meals are logged on the right. */}
         <aside className="app-rail">
@@ -110,6 +122,7 @@ function App() {
           </section>
         </main>
       </div>
+      )}
     </div>
   );
 }

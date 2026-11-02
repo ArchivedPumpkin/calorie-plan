@@ -103,6 +103,11 @@
   min-width: 0;
 }
 
+/* First visit: only the calorie calculator, full width. */
+.app-onboarding {
+  padding-bottom: 64px;
+}
+
 /* Phones: compact masthead so the food log is reachable without scrolling. */
 @media (max-width: 720px) {
   .app-header {

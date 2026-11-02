@@ -1,0 +1,525 @@
+/* ==========================================================================
+   TDEE calculator — first visit: step 1 (about you) beside step 2 (goal).
+   ========================================================================== */
+.tdee-title {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 30px;
+  line-height: 1;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  color: var(--text-hi);
+  margin-bottom: 8px;
+}
+
+.tdee-intro {
+  font-size: 14px;
+  color: var(--text);
+  margin-bottom: 22px;
+}
+
+/* Before calculating: the form card alone, full width.
+   After: form on the left (420px), results filling the rest. */
+.tdee-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 20px;
+  align-items: start;
+}
+
+/* Card alone at full width (desktop): intro and perks on the left,
+   the stacked form on the right. */
+@media (min-width: 901px) {
+  .tdee-layout:not(.tdee-layout--results) .tdee-panel--form {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 460px);
+    gap: 48px;
+
+    .tdee-welcome {
+      padding-right: 48px;
+      border-right: 1px solid var(--line);
+    }
+
+    .tdee-title {
+      font-size: 40px;
+    }
+  }
+}
+
+/* The perks list only makes sense before calculating, and on wide screens. */
+.tdee-perks {
+  display: none;
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+  gap: 14px;
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text-hi);
+  }
+
+  svg {
+    flex: none;
+    box-sizing: content-box;
+    padding: 9px;
+    border-radius: 50%;
+    color: var(--accent);
+    background: var(--accent-soft);
+  }
+
+  @media (min-width: 901px) {
+    .tdee-layout:not(.tdee-layout--results) & {
+      display: grid;
+    }
+  }
+}
+
+.tdee-layout--results {
+  grid-template-columns: minmax(300px, 420px) minmax(0, 1fr);
+
+  @media (max-width: 900px) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* Keep the inputs in view while scrolling through the results. */
+  .tdee-panel--form {
+    position: sticky;
+    top: 24px;
+
+    @media (max-width: 900px) {
+      position: static;
+    }
+  }
+}
+
+/* Results slide in from the right (from below when stacked). */
+.tdee-panel--results {
+  animation: tdee-slide-in 0.55s 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
+
+  @media (max-width: 900px) {
+    animation-name: tdee-slide-up;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+
+@keyframes tdee-slide-in {
+  from {
+    opacity: 0;
+    transform: translateX(48px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes tdee-slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* "1  About you" step marker. */
+.tdee-step {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font: var(--label);
+  letter-spacing: var(--label-tracking);
+  text-transform: uppercase;
+  color: var(--text-hi);
+  margin-bottom: 18px;
+
+  span {
+    display: grid;
+    place-items: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    font: 700 12px/1 var(--sans);
+    letter-spacing: 0;
+    color: var(--accent-ink);
+    background: var(--accent);
+  }
+}
+
+/* ---------------------------------------------------------------- step 1 */
+/* One field per row, top to bottom. */
+.tdee-form {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 14px;
+
+  .form-row {
+    margin-bottom: 0;
+  }
+
+  .form-row--wide {
+    grid-column: 1 / -1;
+  }
+
+  label em {
+    font-style: normal;
+    text-transform: none;
+    letter-spacing: normal;
+    font-weight: 400;
+    color: var(--text-mute);
+  }
+
+  select {
+    width: 100%;
+    font: inherit;
+    font-weight: 500;
+    color: var(--text-hi);
+    background: var(--bg);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-sm);
+    padding: 11px 13px;
+    transition: border-color 0.15s, box-shadow 0.15s;
+
+    &:hover {
+      border-color: var(--text-mute);
+    }
+    &:focus-visible {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-soft);
+    }
+  }
+}
+
+/* Male / female as a two-button segmented control. */
+.tdee-sex {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  border: none;
+
+  legend {
+    font: var(--label);
+    letter-spacing: var(--label-tracking);
+    text-transform: uppercase;
+    color: var(--text-mute);
+    margin-bottom: 7px;
+    padding: 0;
+  }
+
+  label {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    margin: 0;
+    font: 600 13px/1 var(--sans);
+    letter-spacing: normal;
+    text-transform: none;
+    color: var(--text);
+    background: var(--bg);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: color 0.15s, border-color 0.15s, background 0.15s;
+
+    &.selected {
+      color: var(--accent);
+      border-color: var(--accent);
+      background: var(--accent-soft);
+    }
+
+    &:focus-within {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+  }
+
+  input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    width: 1px;
+    height: 1px;
+  }
+}
+
+.tdee-submit {
+  grid-column: 1 / -1;
+  width: 100%;
+  min-height: 48px;
+  margin-top: 4px;
+}
+
+.tdee-manual-area {
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+}
+
+.tdee-manual-prompt {
+  font-size: 14px;
+  color: var(--text-mute);
+  text-align: center;
+}
+
+.tdee-link {
+  background: none;
+  border: none;
+  padding: 4px 2px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+
+  &:hover {
+    filter: brightness(1.1);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+}
+
+.tdee-manual {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 10px 12px;
+
+  .form-row {
+    flex: 1 1 100%;
+    margin-bottom: 0;
+  }
+
+  .btn-link {
+    min-height: 40px;
+    padding-inline: 18px;
+  }
+}
+
+/* ---------------------------------------------------------------- step 2 */
+.tdee-headline {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 18px;
+
+  strong {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 56px;
+    line-height: 0.9;
+    color: var(--text-hi);
+    font-variant-numeric: tabular-nums;
+
+    small {
+      font-size: 18px;
+      color: var(--text-mute);
+    }
+  }
+}
+
+.tdee-headline-label {
+  font: var(--label);
+  letter-spacing: var(--label-tracking);
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.tdee-headline-note {
+  font-size: 13px;
+  color: var(--text-mute);
+}
+
+.tdee-goals {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+
+  @media (max-width: 640px) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.tdee-goal {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+}
+
+.tdee-goal-title {
+  font: var(--label);
+  letter-spacing: var(--label-tracking);
+  text-transform: uppercase;
+  color: var(--text);
+}
+
+.tdee-goal-kcal {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 34px;
+  line-height: 1;
+  color: var(--text-hi);
+  font-variant-numeric: tabular-nums;
+
+  small {
+    font-size: 15px;
+    color: var(--text-mute);
+  }
+}
+
+.tdee-goal-note {
+  font-size: 12px;
+  color: var(--text-mute);
+}
+
+/* Full-width primary button at the bottom of each goal card. */
+.tdee-goal-use {
+  margin-top: auto;
+  min-height: 44px;
+  font: 700 12px/1 var(--sans);
+  letter-spacing: var(--label-tracking);
+  text-transform: uppercase;
+  color: var(--accent-ink);
+  background: var(--accent);
+  border: none;
+  border-radius: 999px;
+  transition: filter 0.15s, box-shadow 0.15s;
+
+  &:hover {
+    filter: brightness(1.08);
+    box-shadow: 0 0 24px -4px var(--accent-glow);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+}
+
+.tdee-footnote {
+  font-size: 12px;
+  color: var(--text-mute);
+  margin: 10px 0 26px;
+}
+
+.tdee-subheading {
+  font: var(--label);
+  letter-spacing: var(--label-tracking);
+  text-transform: uppercase;
+  color: var(--text-hi);
+  margin: 0 0 12px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+}
+
+.tdee-stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+
+  @media (max-width: 640px) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.tdee-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+
+  h4 {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font: var(--label);
+    letter-spacing: var(--label-tracking);
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 6px;
+  }
+}
+
+.tdee-stat-value {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 30px;
+  line-height: 1;
+  color: var(--text-hi);
+  font-variant-numeric: tabular-nums;
+
+  small {
+    font-size: 14px;
+    color: var(--text-mute);
+  }
+}
+
+.tdee-stat-note {
+  font-size: 13px;
+  color: var(--text);
+}
+
+.tdee-stat-fine {
+  font-size: 12px;
+  color: var(--text-mute);
+  margin-top: 4px;
+}
+
+.tdee-stat-list {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 6px 12px;
+  margin: 8px 0 0;
+  font-size: 13px;
+
+  dt {
+    color: var(--text-mute);
+  }
+
+  dd {
+    margin: 0;
+    text-align: right;
+    color: var(--text-hi);
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .current {
+    color: var(--accent);
+    font-weight: 600;
+  }
+}
+
+@media (max-width: 720px) {
+  .tdee-title {
+    font-size: 26px;
+  }
+
+  .tdee-headline strong {
+    font-size: 44px;
+  }
+}

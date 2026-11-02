@@ -1,7 +1,6 @@
-
-
 import { useState } from "react";
 import { ChartPie, Check } from "lucide-react";
+import { MACRO_SPLITS, macroGrams, type MacroSplitKey } from "../lib/macros";
 
 type MacrosProps = {
   setMacros: React.Dispatch<
@@ -15,69 +14,47 @@ type MacrosProps = {
   };
 };
 
-
-type CarbsOption = {
-  moderate: { protein: number; carbs: number; fat: number };
-  lower: { protein: number; carbs: number; fat: number };
-  higher: { protein: number; carbs: number; fat: number };
-};
-
-
 export default function Macros(props: MacrosProps) {
+  const [selected, setSelected] = useState<MacroSplitKey | null>(null);
 
-  // 1. we split into 3 options the user can choose: moderate cards, lower carbs, and higher carbs.
-  // moderate carbs: 30/35/35
-  // lower carbs: 40/40/20
-  // higher carbs: 30/20/50
-  // we display 3 cards, user selects one and we set the props by updating the protein, carbs, and fat values accordingly.
-
-  const carbsOptions: CarbsOption = {
-    moderate: { protein: 30, carbs: 35, fat: 35 },
-    lower: { protein: 40, carbs: 40, fat: 20 },
-    higher: { protein: 30, carbs: 20, fat: 50 }
+  function handleSelect(key: MacroSplitKey) {
+    setSelected(key);
+    props.setMacros(macroGrams(props.caloricDeficit, key));
   }
 
-  const [selected, setSelected] = useState<keyof CarbsOption | null>(null);
-
-  function handleSelect(name: keyof CarbsOption, option: CarbsOption[keyof CarbsOption]) {
-    setSelected(name);
-    props.setMacros({ protein: gramsFromPercent(option.protein, 4), carbs: gramsFromPercent(option.carbs, 4), fats: gramsFromPercent(option.fat, 9) });
-  }
-
-  // protein/carbs are 4 calories per gram, fat is 9 calories per gram
-  function gramsFromPercent(percent: number, caloriesPerGram: number) {
-    return Math.round((props.caloricDeficit * (percent / 100)) / caloriesPerGram);
-  }
-
-  const carbsCard = Object.entries(carbsOptions).map(([name, option]) => (
-    <button
-      key={name}
-      type="button"
-      className={`macro-card${selected === name ? " selected" : ""}`}
-      onClick={() => handleSelect(name as keyof CarbsOption, option)}
-    >
-      <div className="macro-card-badge">
-        <span>
-          {name[0].toUpperCase() + name.slice(1)} Carb ({option.protein}/{option.carbs}/{option.fat})
-        </span>
-        <Check className="macro-card-check" size={14} strokeWidth={3} />
-      </div>
-      <div className="macro-card-body">
-        <div className="macro-stat">
-          <strong>{gramsFromPercent(option.protein, 4)}g</strong>
-          <span>protein</span>
+  const carbsCard = (Object.keys(MACRO_SPLITS) as MacroSplitKey[]).map((key) => {
+    const split = MACRO_SPLITS[key];
+    const grams = macroGrams(props.caloricDeficit, key);
+    return (
+      <button
+        key={key}
+        type="button"
+        className={`macro-card${selected === key ? " selected" : ""}`}
+        onClick={() => handleSelect(key)}
+      >
+        <div className="macro-card-badge">
+          <span>
+            {split.label} ({split.protein}/{split.carbs}/{split.fats})
+          </span>
+          <Check className="macro-card-check" size={14} strokeWidth={3} />
         </div>
-        <div className="macro-stat">
-          <strong>{gramsFromPercent(option.fat, 9)}g</strong>
-          <span>fats</span>
+        <div className="macro-card-body">
+          <div className="macro-stat">
+            <strong>{grams.protein}g</strong>
+            <span>protein</span>
+          </div>
+          <div className="macro-stat">
+            <strong>{grams.carbs}g</strong>
+            <span>carbs</span>
+          </div>
+          <div className="macro-stat">
+            <strong>{grams.fats}g</strong>
+            <span>fats</span>
+          </div>
         </div>
-        <div className="macro-stat">
-          <strong>{gramsFromPercent(option.carbs, 4)}g</strong>
-          <span>carbs</span>
-        </div>
-      </div>
-    </button>
-  ))
+      </button>
+    );
+  });
 
   return (
     <div>
