@@ -14,8 +14,9 @@ import TdeeCalculator from "./Components/TdeeCalculator";
 import "./styles/index.css";
 import AuthForm from "./Components/AuthForm";
 import { authClient } from "./lib/auth-client";
-import { useQuery, useApolloClient } from "@apollo/client/react";
+import { useQuery, useMutation, useApolloClient } from "@apollo/client/react";
 import { FOOD_ENTRIES, today } from "./graphql/foodLog";
+import { PROFILE, SAVE_PROFILE } from "./graphql/profile";
 
 
 type Macros = {
@@ -26,25 +27,34 @@ type Macros = {
 
 function App() {
   const { data: session, isPending } = authClient.useSession();
-  const [caloricDeficit, setCaloricDeficit] = React.useState<number>(0);
-  const [macros, setMacros] = React.useState<Macros>({
-    protein: 0,
-    carbs: 0,
-    fats: 0,
-  });
   const { data } = useQuery(FOOD_ENTRIES, { variables: { date: today() } });
   const foodLog = data?.foodEntries ?? [];
   const client = useApolloClient();
 
+  // The calorie target and macros are saved per user, so they come from the server.
+  const { data: profileData, loading: profileLoading } = useQuery(PROFILE, { skip: !session });
+  const [saveProfile] = useMutation(SAVE_PROFILE, {
+    refetchQueries: [PROFILE],
+    awaitRefetchQueries: true,
+  });
+  const profile = profileData?.profile;
+  const caloricDeficit = profile?.calorieTarget ?? 0;
+  const macros: Macros = {
+    protein: profile?.protein ?? 0,
+    carbs: profile?.carbs ?? 0,
+    fats: profile?.fats ?? 0,
+  };
+  // "Edit" reopens the calculator without wiping the saved target.
+  const [editingTarget, setEditingTarget] = React.useState(false);
+
   async function handleSignOut() {
     await authClient.signOut();
-    setCaloricDeficit(0);
-    setMacros({ protein: 0, carbs: 0, fats: 0 });
+    setEditingTarget(false);
     await client.clearStore();
   }
 
 
-  if (isPending) {
+  if (isPending || (session && profileLoading)) {
     return <p className="app-loading">Loading…</p>;
   }
   if (!session) {
@@ -52,9 +62,19 @@ function App() {
   }
 
   // A new target means the old macro grams no longer fit, so the split is picked again.
-  function handleSelectGoal(calories: number) {
-    setCaloricDeficit(calories);
-    setMacros({ protein: 0, carbs: 0, fats: 0 });
+  async function handleSelectGoal(calories: number, birthDate: string | null) {
+    await saveProfile({
+      variables: { input: { calorieTarget: calories, protein: 0, carbs: 0, fats: 0, birthDate } },
+    });
+    setEditingTarget(false);
+  }
+
+  function handleSelectMacros(grams: Macros) {
+    saveProfile({
+      variables: {
+        input: { calorieTarget: caloricDeficit, ...grams, birthDate: profile?.birthDate ?? null },
+      },
+    });
   }
 
   return (
@@ -79,9 +99,12 @@ function App() {
         </p>
       </header>
 
-      {caloricDeficit === 0 ? (
+      {caloricDeficit === 0 || editingTarget ? (
         <main className="app-onboarding">
-          <TdeeCalculator onSelectGoal={handleSelectGoal} />
+          <TdeeCalculator
+            onSelectGoal={handleSelectGoal}
+            savedBirthDate={profile?.birthDate}
+          />
         </main>
       ) : (
       <div className="app-layout">
@@ -90,7 +113,7 @@ function App() {
           <section className="card">
             <CaloricDeficit
               caloricDeficit={caloricDeficit}
-              setCaloricDeficit={setCaloricDeficit}
+              onEdit={() => setEditingTarget(true)}
             />
           </section>
 
@@ -99,7 +122,7 @@ function App() {
               <Macros
                 caloricDeficit={caloricDeficit}
                 macros={macros}
-                setMacros={setMacros}
+                onSelect={handleSelectMacros}
               />
             </section>
           )}

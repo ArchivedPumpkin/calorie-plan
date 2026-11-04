@@ -3,6 +3,7 @@ import { Calculator, Flame, Scale, Dumbbell, HeartPulse, Target } from "lucide-r
 import {
     ACTIVITY_LEVELS,
     GOAL_ADJUSTMENT_KCAL,
+    ageFromBirthDate,
     bmiCategory,
     calculateBmi,
     calculateBmr,
@@ -19,7 +20,9 @@ import {
 import { macroGrams } from "../lib/macros";
 
 type TdeeCalculatorProps = {
-    onSelectGoal: (calories: number) => void;
+    onSelectGoal: (calories: number, birthDate: string | null) => void;
+    // Pre-fills the birthday when the user comes back to recalculate.
+    savedBirthDate?: string | null;
 };
 
 const GOALS: { key: GoalKey; title: string; note: string }[] = [
@@ -30,10 +33,17 @@ const GOALS: { key: GoalKey; title: string; note: string }[] = [
 
 const round1 = (n: number) => Math.round(n * 10) / 10;
 
+// The date n years before today as YYYY-MM-DD, for the birthday picker's range.
+function yearsAgo(n: number) {
+    const date = new Date();
+    date.setFullYear(date.getFullYear() - n);
+    return date.toLocaleDateString("en-CA");
+}
+
 export default function TdeeCalculator(props: TdeeCalculatorProps) {
     const [form, setForm] = React.useState({
         sex: "male" as Sex,
-        age: "",
+        birthDate: props.savedBirthDate ?? "",
         weightKg: "",
         heightCm: "",
         activity: "moderate" as ActivityLevel,
@@ -74,7 +84,7 @@ export default function TdeeCalculator(props: TdeeCalculatorProps) {
 
     function handleManualSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
-        props.onSelectGoal(Number(manualCalories));
+        props.onSelectGoal(Number(manualCalories), form.birthDate || null);
     }
 
     function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) {
@@ -89,7 +99,7 @@ export default function TdeeCalculator(props: TdeeCalculatorProps) {
         }
         setStats({
             sex: form.sex,
-            age: Number(form.age),
+            age: ageFromBirthDate(form.birthDate),
             weightKg: Number(form.weightKg),
             heightCm: Number(form.heightCm),
             activity: form.activity,
@@ -134,8 +144,10 @@ export default function TdeeCalculator(props: TdeeCalculatorProps) {
                             ))}
                         </fieldset>
                         <div className="form-row">
-                            <label htmlFor="tdee-age">Age</label>
-                            <input type="number" id="tdee-age" name="age" min={15} max={100} required inputMode="numeric" placeholder="30" value={form.age} onChange={handleChange} />
+                            <label htmlFor="tdee-birthdate">
+                                Birthday {form.birthDate && <em>{ageFromBirthDate(form.birthDate)} years old</em>}
+                            </label>
+                            <input type="date" id="tdee-birthdate" name="birthDate" min={yearsAgo(100)} max={yearsAgo(15)} required value={form.birthDate} onChange={handleChange} />
                         </div>
                         <div className="form-row">
                             <label htmlFor="tdee-weight">Weight (kg)</label>
@@ -217,7 +229,7 @@ export default function TdeeCalculator(props: TdeeCalculatorProps) {
                                                 <span className="macro-chip macro-chip--carbs">{grams.carbs}g C</span>
                                                 <span className="macro-chip macro-chip--fats">{grams.fats}g F</span>
                                             </div>
-                                            <button type="button" className="tdee-goal-use" onClick={() => props.onSelectGoal(calories)}>
+                                            <button type="button" className="tdee-goal-use" onClick={() => props.onSelectGoal(calories, form.birthDate || null)}>
                                                 Choose
                                             </button>
                                         </div>

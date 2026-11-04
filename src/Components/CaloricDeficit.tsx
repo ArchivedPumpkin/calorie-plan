@@ -2,10 +2,10 @@ import { Target, Pencil } from "lucide-react";
 
 type CaloricDeficitProps = {
   caloricDeficit: number;
-  setCaloricDeficit: (caloricDeficit: number) => void;
+  onEdit: () => void;
 };
 
-// Shown once a target is set; "Edit" clears it, which brings back the calculator.
+// Shown once a target is set; "Edit" brings back the calculator.
 export default function CaloricDeficit(props: CaloricDeficitProps) {
   return (
     <div>
@@ -23,7 +23,7 @@ export default function CaloricDeficit(props: CaloricDeficitProps) {
         <button
           type="button"
           className="btn-link"
-          onClick={() => props.setCaloricDeficit(0)}
+          onClick={props.onEdit}
         >
           <Pencil size={12} strokeWidth={2.5} />
           Edit

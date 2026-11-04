@@ -19,6 +19,14 @@ export const ACTIVITY_LEVELS: Record<ActivityLevel, { label: string; multiplier:
     athlete: { label: "Athlete (2x per day)", multiplier: 1.9 },
 };
 
+/** Age in whole years from a YYYY-MM-DD birthday, counting the birthday itself. */
+export function ageFromBirthDate(birthDate: string, today = new Date()): number {
+    const [year, month, day] = birthDate.split("-").map(Number);
+    const hadBirthdayThisYear =
+        today.getMonth() + 1 > month || (today.getMonth() + 1 === month && today.getDate() >= day);
+    return today.getFullYear() - year - (hadBirthdayThisYear ? 0 : 1);
+}
+
 // Roughly 0.5 kg per week either way.
 export const GOAL_ADJUSTMENT_KCAL = 500;
 

@@ -5,6 +5,7 @@ import {
   addFoodEntry,
   deleteFoodEntry,
 } from "../services/foodLog.js";
+import { getProfile, saveProfile } from "../services/profile.js";
 
 function requireUser(context) {
   if (!context.user) {
@@ -21,6 +22,7 @@ export const resolvers = {
     me: (parent, args, context) => requireUser(context),
     foodEntries: (parent, args, context) =>
       getFoodEntries(requireUser(context).id, args.date),
+    profile: (parent, args, context) => getProfile(requireUser(context).id),
   },
 
   Mutation: {
@@ -28,5 +30,7 @@ export const resolvers = {
       addFoodEntry(requireUser(context).id, args.input),
     deleteFoodEntry: (parent, args, context) =>
       deleteFoodEntry(requireUser(context).id, args.id),
+    saveProfile: (parent, args, context) =>
+      saveProfile(requireUser(context).id, args.input),
   },
 };

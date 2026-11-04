@@ -140,7 +140,8 @@ label {
 }
 
 input[type="number"],
-input[type="text"] {
+input[type="text"],
+input[type="date"] {
   width: 100%;
   font: inherit;
   font-weight: 500;

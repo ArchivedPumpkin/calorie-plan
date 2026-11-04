@@ -3,9 +3,7 @@ import { ChartPie, Check } from "lucide-react";
 import { MACRO_SPLITS, macroGrams, type MacroSplitKey } from "../lib/macros";
 
 type MacrosProps = {
-  setMacros: React.Dispatch<
-    React.SetStateAction<{ protein: number; carbs: number; fats: number }>
-  >;
+  onSelect: (macros: { protein: number; carbs: number; fats: number }) => void;
   caloricDeficit: number;
   macros: {
     protein: number;
@@ -19,7 +17,7 @@ export default function Macros(props: MacrosProps) {
 
   function handleSelect(key: MacroSplitKey) {
     setSelected(key);
-    props.setMacros(macroGrams(props.caloricDeficit, key));
+    props.onSelect(macroGrams(props.caloricDeficit, key));
   }
 
   const carbsCard = (Object.keys(MACRO_SPLITS) as MacroSplitKey[]).map((key) => {
